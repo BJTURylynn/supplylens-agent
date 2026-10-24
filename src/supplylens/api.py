@@ -163,7 +163,7 @@ def create_app(settings: Settings | None = None, *, index=None, model_factory=No
         fresh = provider_settings()
         result = cloud_status(fresh)
         result["restart_required"] = any(getattr(fresh, key) != getattr(config, key) for key in (
-            "model_api_key", "model_base_url", "model_name", "agent_mode", "embedding_mode"))
+            "model_api_key", "model_base_url", "model_name", "model_extra_body", "agent_mode", "embedding_mode"))
         return result
 
     @app.post("/api/cloud/check")

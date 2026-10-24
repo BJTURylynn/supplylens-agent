@@ -13,7 +13,7 @@ KEY = "private-cloud-check-key-never-return"
 
 def config(**kwargs):
     return Settings(_env_file=None, model_api_key=KEY, model_base_url="https://probe.example/v1",
-                    embedding_dimensions=4, model_timeout_seconds=.5, **kwargs)
+                    embedding_dimensions=4, model_timeout_seconds=.5, embedding_mode="cloud", **kwargs)
 
 
 def chat_response(tool_call: bool):
@@ -66,6 +66,45 @@ async def test_missing_key_never_calls_provider():
     result = await check_cloud(settings, transport=httpx.MockTransport(fail))
     assert result["status"] == "not_configured"
     assert result["stages"] == []
+
+
+async def test_local_retrieval_only_checks_chat_and_omits_qwen_options():
+    settings = config()
+    settings.embedding_mode = "local"
+    settings.model_extra_body = {}
+    calls = []
+
+    def handler(request):
+        assert request.url.path.endswith("chat/completions")
+        payload = json.loads(request.content)
+        assert "enable_thinking" not in payload
+        calls.append(payload)
+        return httpx.Response(200, json=chat_response(len(calls) == 1))
+
+    result = await check_cloud(settings, transport=httpx.MockTransport(handler))
+    assert result["status"] == "ok"
+    assert result["stages"][0]["status"] == "skipped"
+    assert result["embedding_tokens"] is None
+    assert len(calls) == 2
+
+
+async def test_http_200_trial_quota_notice_is_reported_without_retry():
+    settings = config()
+    settings.embedding_mode = "local"
+    calls = []
+
+    def handler(request):
+        calls.append(request)
+        payload = chat_response(False)
+        payload["choices"][0]["message"]["content"] = (
+            "Sorry, to prevent abuse of free resources, accounts that have not been recharged can only try 10 times."
+        )
+        return httpx.Response(200, json=payload)
+
+    result = await check_cloud(settings, transport=httpx.MockTransport(handler))
+    assert result["status"] == "failed"
+    assert result["stages"][1]["code"] == "trial_quota"
+    assert len(calls) == 1
 
 
 @pytest.mark.parametrize("status,code", [(401, "authentication"), (403, "authentication"), (429, "rate_limit"), (500, "provider_or_protocol")])

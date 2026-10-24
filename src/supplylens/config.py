@@ -17,6 +17,7 @@ class Settings(BaseSettings):
     model_api_key: str = ""
     model_base_url: str = "https://dashscope.aliyuncs.com/compatible-mode/v1"
     model_name: str = "qwen-plus"
+    model_extra_body: dict = Field(default_factory=lambda: {"enable_thinking": False})
     embedding_model: str = "text-embedding-v4"
     embedding_dimensions: int = 1024
     as_of_date: date = date(2026, 10, 24)

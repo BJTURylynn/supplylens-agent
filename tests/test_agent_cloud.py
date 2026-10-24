@@ -118,6 +118,17 @@ def service_with_model(cloud_environment, replies, **overrides):
     return service, model
 
 
+async def test_trial_quota_notice_stops_graph_and_explains_limitation(cloud_environment):
+    service, model = service_with_model(cloud_environment, [AIMessage(content=(
+        "Sorry, to prevent abuse of free resources, accounts that have not been recharged can only try 10 times."
+    ))])
+    result = await service.run("分析 PO-1001")
+    assert result["status"] == "partial"
+    assert "试用次数已用完" in result["answer"]
+    assert result["report"] is None
+    assert len(model.calls) == 1
+
+
 @pytest.mark.asyncio
 async def test_cloud_model_selected_tools_execute_and_report_has_valid_evidence(cloud_environment):
     def finish(messages):

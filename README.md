@@ -36,6 +36,7 @@ SupplyLens 是一个可在本地运行的个人工程作品。内置订单、供
 | --- | --- | --- | --- |
 | 默认 Demo | 确定性工具工作流，无 LLM 调用 | 本地词法 n-gram 哈希向量 | 否 |
 | Cloud | 真实模型工具调用 | 云端 Embedding | 是 |
+| Cloud + 本地检索 | 真实模型工具调用 | 本地词法 n-gram 哈希向量 | 是，仅聊天模型 |
 
 本地检索属于词法基线，不能视作语义模型。Demo 的通过率只能说明这条确定性工作流在给定样例上的表现，不能当作真实模型 Agent 能力指标。
 
@@ -128,11 +129,11 @@ uv run supplylens evaluate --mode demo --output evaluation/results/demo.json
 uv run supplylens evaluate --mode cloud --output evaluation/results/cloud.json
 ```
 
-**已验证：** Python 3.11.16 与 3.12.14 下均有 165 项测试通过；两个版本的 30 个独立验收案例均全部通过，其中 5 个为故障注入案例，真实云模型调用数为 0。JUnit 报告：[Python 3.11](evaluation/results/pytest-py311.xml)、[Python 3.12](evaluation/results/pytest-py312.xml)。
+**已验证：** Python 3.11.16 与 3.12.14 下均有 168 项测试通过；两个版本的 30 个独立验收案例均全部通过，其中 5 个为故障注入案例，真实云模型调用数为 0。JUnit 报告：[Python 3.11](evaluation/results/pytest-py311.xml)、[Python 3.12](evaluation/results/pytest-py312.xml)。
 
 真实页面已检查订单报告、工具轨迹、跟进草稿、`PO-1009` 缺失 ETA 的信息缺口提示，以及 API 重启后的上下文清理和提示。
 
-Cloud 路径包括 14 项脚本化模型协议测试，以及 1 项真实 `ChatOpenAI` SDK／模拟 HTTP 传输测试；后者验证完整两轮工具调用与 usage 解析。这些离线测试不调用真实云 API；另有 12 项连接探针测试和 33 项导入测试。实际 DashScope 连接探针已尝试，向量与聊天阶段均返回 HTTP 401，尚未连通；真实模型业务评测、MySQL 运行和 Docker 部署尚未执行。MySQL 已做 DDL 编译检查，本机没有 Docker CLI。
+Cloud 路径包括 15 项脚本化模型协议测试，以及 1 项真实 `ChatOpenAI` SDK／模拟 HTTP 传输测试；后者验证完整两轮工具调用与 usage 解析。这些离线测试不调用真实云 API；另有 14 项连接探针测试和 33 项导入测试。实际 DashScope 探针返回 HTTP 401；随后 AIHubMix 免费 GLM 工具调用及模板订单分析已跑通，详见 [联调记录](docs/cloud-integration.md)。批量真实模型业务评测、MySQL 运行和 Docker 部署尚未执行。MySQL 已做 DDL 编译检查，本机没有 Docker CLI。
 
 完整状态、复现命令及结果解释见 [验证记录](docs/validation.md)；[Demo 评测原始结果](evaluation/results/demo.json)保留运行模式和样本范围。上述 30/30 是固定样例验收结果，不是开放域准确率。
 

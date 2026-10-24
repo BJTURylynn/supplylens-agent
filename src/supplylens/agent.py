@@ -16,6 +16,7 @@ from langgraph.graph.message import add_messages
 
 from supplylens.config import Settings
 from supplylens.db import save_run
+from supplylens.provider import ProviderQuotaError, validate_provider_reply
 from supplylens.reports import (
     SAFE_NOTES,
     build_report,
@@ -95,7 +96,7 @@ class AgentService:
             model=self.settings.model_name, api_key=self.settings.model_api_key,
             base_url=self.settings.model_base_url, temperature=0,
             timeout=self.settings.model_timeout_seconds, max_retries=0,
-            extra_body={"enable_thinking": False},
+            extra_body=self.settings.model_extra_body,
         )
 
     def _tools(self, ctx: Execution):
@@ -196,6 +197,7 @@ class AgentService:
                 timeout=min(self.settings.model_timeout_seconds, max(.001, ctx.deadline - time.monotonic())),
             )
             usage = getattr(response, "usage_metadata", None)
+            validate_provider_reply(response)
             if usage:
                 for key in ["input_tokens", "output_tokens"]:
                     if usage.get(key) is not None:
@@ -269,6 +271,7 @@ class AgentService:
                     if usage.get(key) is not None:
                         setattr(ctx, key, (getattr(ctx, key) or 0) + usage[key])
             ctx.candidate = response.content if isinstance(response.content, str) else ""
+            validate_provider_reply(response)
         ctx.errors.append("模型建议未通过结构或引用校验，报告仅展示核验事实和流程原文摘录")
         return default_narrative(ctx.refs)
 
@@ -328,6 +331,9 @@ class AgentService:
                     response.answer = f"未找到采购单 {order_id}，或该单在所选分析日期尚不可见；请核对单号与日期。未生成分析结论。"
                 except (TimeoutError, BudgetExceeded):
                     ctx.errors.append("本次执行达到时间或调用上限，请重试；已完成的核查保留在执行记录中。")
+                    response.status = "partial" if ctx.analysis or ctx.snapshot else "failed"
+                except ProviderQuotaError as exc:
+                    ctx.errors.append(str(exc))
                     response.status = "partial" if ctx.analysis or ctx.snapshot else "failed"
                 except Exception as exc:
                     error = "云端模式需要配置 MODEL_API_KEY。" if (

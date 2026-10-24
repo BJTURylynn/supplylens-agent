@@ -213,15 +213,15 @@ def render_cloud_panel() -> None:
         except APIError as exc:
             st.warning(str(exc))
             return
-        st.caption(f"聊天模型：{status['model']}；向量模型：{status['embedding_model']}")
+        st.caption(f"聊天模型：{status['model']}；检索：" + ("本地词法向量" if status["embedding_mode"] == "local" else status["embedding_model"]))
         st.caption("密钥状态：" + ("已配置" if status["configured"] else "未配置"))
         if not status["configured"]:
             st.info("请在服务端本地 .env 设置 MODEL_API_KEY，不要把密钥发到聊天或提交 GitHub。")
         if status.get("restart_required"):
             st.warning("本地配置已变化。连接检查会读取新配置；正式分析前请重启 API，并构建对应向量索引。")
         if status["configured"] and status["agent_mode"] != "cloud":
-            st.info("当前分析仍是本地规则模式。使用真实模型分析需设置 AGENT_MODE=cloud 和 EMBEDDING_MODE=cloud，构建索引并重启 API。")
-        st.caption("检查只发送测试文本，验证向量接口和两轮工具调用，会产生少量模型调用；不会读取订单。")
+            st.info("当前分析仍是本地规则模式。使用真实模型分析需设置 AGENT_MODE=cloud，并重启 API。EMBEDDING_MODE=local 可继续使用本地检索。")
+        st.caption("检查只发送测试文本，验证两轮工具调用；仅在云端检索模式下检查向量接口。会产生少量模型调用，不会读取订单。")
         if st.button("检查真实 API", disabled=not status["configured"]):
             with st.spinner("正在检查模型接口…"):
                 try:
