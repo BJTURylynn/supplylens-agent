@@ -1,0 +1,56 @@
+services:
+  db:
+    image: mysql:8.4
+    environment:
+      MYSQL_DATABASE: supplylens
+      MYSQL_USER: supplylens
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD:-supplylens-local-demo}
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:-supplylens-local-root}
+      TZ: Asia/Shanghai
+    volumes:
+      - mysql-data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD-SHELL", "MYSQL_PWD=\"$$MYSQL_PASSWORD\" mysql -h 127.0.0.1 -u supplylens supplylens -e 'SELECT 1'"]
+      interval: 5s
+      timeout: 5s
+      retries: 30
+      start_period: 20s
+  api:
+    build: .
+    environment:
+      DATABASE_URL: mysql+pymysql://supplylens:${MYSQL_PASSWORD:-supplylens-local-demo}@db:3306/supplylens?charset=utf8mb4
+      AGENT_MODE: ${AGENT_MODE:-demo}
+      EMBEDDING_MODE: ${EMBEDDING_MODE:-local}
+      MODEL_API_KEY: ${MODEL_API_KEY:-}
+      MODEL_BASE_URL: ${MODEL_BASE_URL:-https://dashscope.aliyuncs.com/compatible-mode/v1}
+      MODEL_NAME: ${MODEL_NAME:-qwen-plus}
+      EMBEDDING_MODEL: ${EMBEDDING_MODEL:-text-embedding-v4}
+      AS_OF_DATE: "2026-10-24"
+      TZ: Asia/Shanghai
+    ports:
+      - "127.0.0.1:8000:8000"
+    volumes:
+      - index-data:/app/runtime
+    depends_on:
+      db:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "/app/.venv/bin/python", "-c", "import urllib.request,json; r=json.load(urllib.request.urlopen('http://127.0.0.1:8000/health')); assert r['status']=='ok'"]
+      interval: 5s
+      timeout: 5s
+      retries: 30
+      start_period: 10s
+  ui:
+    build: .
+    command: ["uv", "run", "--no-sync", "streamlit", "run", "ui/app.py", "--server.address=0.0.0.0", "--server.port=8501", "--server.headless=true", "--browser.gatherUsageStats=false"]
+    environment:
+      API_URL: http://api:8000
+    ports:
+      - "127.0.0.1:8501:8501"
+    depends_on:
+      api:
+        condition: service_healthy
+volumes:
+  mysql-data:
+  index-data:
+

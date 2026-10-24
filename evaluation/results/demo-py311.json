@@ -1,0 +1,1188 @@
+{
+  "generated_at": "2026-10-24T09:12:05.155726+00:00",
+  "python": "3.11.16",
+  "as_of": "2026-10-24",
+  "model": null,
+  "embedding_mode": "local",
+  "summary": {
+    "mode": "demo",
+    "total": 30,
+    "passed": 30,
+    "failed": 0,
+    "pass_rate": 1.0,
+    "fault_injection_cases": 5,
+    "live_cloud_cases": 0,
+    "p50_last_turn_ms": 16.0,
+    "p95_last_turn_ms": 63.0,
+    "input_tokens": null,
+    "output_tokens": null,
+    "interpretation": "固定样例的工作流/故障处理验收，含故障注入；不是开放域准确率。未调用真实聊天或语义向量模型。"
+  },
+  "cases": [
+    {
+      "id": "E01",
+      "name": "逾期部分收货",
+      "passed": true,
+      "errors": [],
+      "fault_injection": null,
+      "live_cloud_model": false,
+      "metrics": {
+        "elapsed_ms": 47.0,
+        "tool_calls": 3,
+        "model_rounds": 0,
+        "input_tokens": null,
+        "output_tokens": null
+      },
+      "turn_metrics": [
+        {
+          "elapsed_ms": 47.0,
+          "tool_calls": 3,
+          "model_rounds": 0,
+          "input_tokens": null,
+          "output_tokens": null
+        }
+      ],
+      "observed": {
+        "status": "completed",
+        "answer": "已核查 PO-1001：发现 2 项到货异常，0 项待核实信息。",
+        "order_id": "PO-1001",
+        "facts": {
+          "supplier_name": "模拟供应商01",
+          "material_code": "MAT-SENSOR-01",
+          "ordered_qty": 1000,
+          "received_qty": 600,
+          "outstanding_qty": 400,
+          "promised_date": "2026-10-22",
+          "overdue_days": 2
+        },
+        "anomaly_codes": [
+          "OVERDUE_UNRECEIVED",
+          "LOGISTICS_EXCEPTION"
+        ]
+      }
+    },
+    {
+      "id": "E02",
+      "name": "正常在途",
+      "passed": true,
+      "errors": [],
+      "fault_injection": null,
+      "live_cloud_model": false,
+      "metrics": {
+        "elapsed_ms": 16.0,
+        "tool_calls": 3,
+        "model_rounds": 0,
+        "input_tokens": null,
+        "output_tokens": null
+      },
+      "turn_metrics": [
+        {
+          "elapsed_ms": 16.0,
+          "tool_calls": 3,
+          "model_rounds": 0,
+          "input_tokens": null,
+          "output_tokens": null
+        }
+      ],
+      "observed": {
+        "status": "completed",
+        "answer": "已核查 PO-1002：发现 0 项到货异常，0 项待核实信息。",
+        "order_id": "PO-1002",
+        "facts": {
+          "supplier_name": "模拟供应商02",
+          "material_code": "MAT-CONNECTOR-02",
+          "ordered_qty": 800,
+          "received_qty": 0,
+          "outstanding_qty": 800,
+          "promised_date": "2026-10-28",
+          "overdue_days": 0
+        },
+        "anomaly_codes": []
+      }
+    },
+    {
+      "id": "E03",
+      "name": "逾期未发运",
+      "passed": true,
+      "errors": [],
+      "fault_injection": null,
+      "live_cloud_model": false,
+      "metrics": {
+        "elapsed_ms": 15.0,
+        "tool_calls": 3,
+        "model_rounds": 0,
+        "input_tokens": null,
+        "output_tokens": null
+      },
+      "turn_metrics": [
+        {
+          "elapsed_ms": 15.0,
+          "tool_calls": 3,
+          "model_rounds": 0,
+          "input_tokens": null,
+          "output_tokens": null
+        }
+      ],
+      "observed": {
+        "status": "completed",
+        "answer": "已核查 PO-1003：发现 1 项到货异常，1 项待核实信息。",
+        "order_id": "PO-1003",
+        "facts": {
+          "supplier_name": "模拟供应商03",
+          "material_code": "MAT-HARNESS-03",
+          "ordered_qty": 500,
+          "received_qty": 0,
+          "outstanding_qty": 500,
+          "promised_date": "2026-10-23",
+          "overdue_days": 1
+        },
+        "anomaly_codes": [
+          "OVERDUE_UNRECEIVED"
+        ]
+      }
+    },
+    {
+      "id": "E04",
+      "name": "尚未到期的ETA风险",
+      "passed": true,
+      "errors": [],
+      "fault_injection": null,
+      "live_cloud_model": false,
+      "metrics": {
+        "elapsed_ms": 63.0,
+        "tool_calls": 3,
+        "model_rounds": 0,
+        "input_tokens": null,
+        "output_tokens": null
+      },
+      "turn_metrics": [
+        {
+          "elapsed_ms": 63.0,
+          "tool_calls": 3,
+          "model_rounds": 0,
+          "input_tokens": null,
+          "output_tokens": null
+        }
+      ],
+      "observed": {
+        "status": "completed",
+        "answer": "已核查 PO-1004：发现 1 项到货异常，0 项待核实信息。",
+        "order_id": "PO-1004",
+        "facts": {
+          "supplier_name": "模拟供应商04",
+          "material_code": "MAT-BRACKET-04",
+          "ordered_qty": 600,
+          "received_qty": 0,
+          "outstanding_qty": 600,
+          "promised_date": "2026-10-26",
+          "overdue_days": 0
+        },
+        "anomaly_codes": [
+          "ETA_DELAY_RISK"
+        ]
+      }
+    },
+    {
+      "id": "E05",
+      "name": "仅物流异常",
+      "passed": true,
+      "errors": [],
+      "fault_injection": null,
+      "live_cloud_model": false,
+      "metrics": {
+        "elapsed_ms": 16.0,
+        "tool_calls": 3,
+        "model_rounds": 0,
+        "input_tokens": null,
+        "output_tokens": null
+      },
+      "turn_metrics": [
+        {
+          "elapsed_ms": 16.0,
+          "tool_calls": 3,
+          "model_rounds": 0,
+          "input_tokens": null,
+          "output_tokens": null
+        }
+      ],
+      "observed": {
+        "status": "completed",
+        "answer": "已核查 PO-1005：发现 1 项到货异常，0 项待核实信息。",
+        "order_id": "PO-1005",
+        "facts": {
+          "supplier_name": "模拟供应商05",
+          "material_code": "MAT-RELAY-05",
+          "ordered_qty": 300,
+          "received_qty": 0,
+          "outstanding_qty": 300,
+          "promised_date": "2026-10-26",
+          "overdue_days": 0
+        },
+        "anomaly_codes": [
+          "LOGISTICS_EXCEPTION"
+        ]
+      }
+    },
+    {
+      "id": "E06",
+      "name": "已收齐旧异常解除",
+      "passed": true,
+      "errors": [],
+      "fault_injection": null,
+      "live_cloud_model": false,
+      "metrics": {
+        "elapsed_ms": 15.0,
+        "tool_calls": 3,
+        "model_rounds": 0,
+        "input_tokens": null,
+        "output_tokens": null
+      },
+      "turn_metrics": [
+        {
+          "elapsed_ms": 15.0,
+          "tool_calls": 3,
+          "model_rounds": 0,
+          "input_tokens": null,
+          "output_tokens": null
+        }
+      ],
+      "observed": {
+        "status": "completed",
+        "answer": "已核查 PO-1006：发现 0 项到货异常，0 项待核实信息。",
+        "order_id": "PO-1006",
+        "facts": {
+          "supplier_name": "模拟供应商06",
+          "material_code": "MAT-SENSOR-01",
+          "ordered_qty": 400,
+          "received_qty": 400,
+          "outstanding_qty": 0,
+          "promised_date": "2026-10-21",
+          "overdue_days": 0
+        },
+        "anomaly_codes": []
+      }
+    },
+    {
+      "id": "E07",
+      "name": "多批次与多次收货",
+      "passed": true,
+      "errors": [],
+      "fault_injection": null,
+      "live_cloud_model": false,
+      "metrics": {
+        "elapsed_ms": 16.0,
+        "tool_calls": 3,
+        "model_rounds": 0,
+        "input_tokens": null,
+        "output_tokens": null
+      },
+      "turn_metrics": [
+        {
+          "elapsed_ms": 16.0,
+          "tool_calls": 3,
+          "model_rounds": 0,
+          "input_tokens": null,
+          "output_tokens": null
+        }
+      ],
+      "observed": {
+        "status": "completed",
+        "answer": "已核查 PO-1007：发现 0 项到货异常，0 项待核实信息。",
+        "order_id": "PO-1007",
+        "facts": {
+          "supplier_name": "模拟供应商07",
+          "material_code": "MAT-CONNECTOR-02",
+          "ordered_qty": 900,
+          "received_qty": 600,
+          "outstanding_qty": 300,
+          "promised_date": "2026-10-26",
+          "overdue_days": 0
+        },
+        "anomaly_codes": []
+      }
+    },
+    {
+      "id": "E08",
+      "name": "风险与信息不足共存",
+      "passed": true,
+      "errors": [],
+      "fault_injection": null,
+      "live_cloud_model": false,
+      "metrics": {
+        "elapsed_ms": 31.0,
+        "tool_calls": 3,
+        "model_rounds": 0,
+        "input_tokens": null,
+        "output_tokens": null
+      },
+      "turn_metrics": [
+        {
+          "elapsed_ms": 31.0,
+          "tool_calls": 3,
+          "model_rounds": 0,
+          "input_tokens": null,
+          "output_tokens": null
+        }
+      ],
+      "observed": {
+        "status": "completed",
+        "answer": "已核查 PO-1008：发现 1 项到货异常，1 项待核实信息。",
+        "order_id": "PO-1008",
+        "facts": {
+          "supplier_name": "模拟供应商08",
+          "material_code": "MAT-HARNESS-03",
+          "ordered_qty": 700,
+          "received_qty": 0,
+          "outstanding_qty": 700,
+          "promised_date": "2026-10-26",
+          "overdue_days": 0
+        },
+        "anomaly_codes": [
+          "ETA_DELAY_RISK"
+        ]
+      }
+    },
+    {
+      "id": "E09",
+      "name": "缺ETA不能判整体正常",
+      "passed": true,
+      "errors": [],
+      "fault_injection": null,
+      "live_cloud_model": false,
+      "metrics": {
+        "elapsed_ms": 16.0,
+        "tool_calls": 3,
+        "model_rounds": 0,
+        "input_tokens": null,
+        "output_tokens": null
+      },
+      "turn_metrics": [
+        {
+          "elapsed_ms": 16.0,
+          "tool_calls": 3,
+          "model_rounds": 0,
+          "input_tokens": null,
+          "output_tokens": null
+        }
+      ],
+      "observed": {
+        "status": "completed",
+        "answer": "已核查 PO-1009：发现 0 项到货异常，1 项待核实信息。",
+        "order_id": "PO-1009",
+        "facts": {
+          "supplier_name": "模拟供应商09",
+          "material_code": "MAT-BRACKET-04",
+          "ordered_qty": 500,
+          "received_qty": 0,
+          "outstanding_qty": 500,
+          "promised_date": "2026-10-26",
+          "overdue_days": 0
+        },
+        "anomaly_codes": []
+      }
+    },
+    {
+      "id": "E10",
+      "name": "ETA失效",
+      "passed": true,
+      "errors": [],
+      "fault_injection": null,
+      "live_cloud_model": false,
+      "metrics": {
+        "elapsed_ms": 15.0,
+        "tool_calls": 3,
+        "model_rounds": 0,
+        "input_tokens": null,
+        "output_tokens": null
+      },
+      "turn_metrics": [
+        {
+          "elapsed_ms": 15.0,
+          "tool_calls": 3,
+          "model_rounds": 0,
+          "input_tokens": null,
+          "output_tokens": null
+        }
+      ],
+      "observed": {
+        "status": "completed",
+        "answer": "已核查 PO-1010：发现 0 项到货异常，1 项待核实信息。",
+        "order_id": "PO-1010",
+        "facts": {
+          "supplier_name": "模拟供应商10",
+          "material_code": "MAT-RELAY-05",
+          "ordered_qty": 200,
+          "received_qty": 0,
+          "outstanding_qty": 200,
+          "promised_date": "2026-10-26",
+          "overdue_days": 0
+        },
+        "anomaly_codes": []
+      }
+    },
+    {
+      "id": "E11",
+      "name": "未来数据截断",
+      "passed": true,
+      "errors": [],
+      "fault_injection": null,
+      "live_cloud_model": false,
+      "metrics": {
+        "elapsed_ms": 16.0,
+        "tool_calls": 3,
+        "model_rounds": 0,
+        "input_tokens": null,
+        "output_tokens": null
+      },
+      "turn_metrics": [
+        {
+          "elapsed_ms": 16.0,
+          "tool_calls": 3,
+          "model_rounds": 0,
+          "input_tokens": null,
+          "output_tokens": null
+        }
+      ],
+      "observed": {
+        "status": "completed",
+        "answer": "已核查 PO-1011：发现 0 项到货异常，0 项待核实信息。",
+        "order_id": "PO-1011",
+        "facts": {
+          "supplier_name": "模拟供应商01",
+          "material_code": "MAT-SENSOR-01",
+          "ordered_qty": 100,
+          "received_qty": 0,
+          "outstanding_qty": 100,
+          "promised_date": "2026-10-25",
+          "overdue_days": 0
+        },
+        "anomaly_codes": []
+      }
+    },
+    {
+      "id": "E12",
+      "name": "承诺日当天与日末收货",
+      "passed": true,
+      "errors": [],
+      "fault_injection": null,
+      "live_cloud_model": false,
+      "metrics": {
+        "elapsed_ms": 16.0,
+        "tool_calls": 3,
+        "model_rounds": 0,
+        "input_tokens": null,
+        "output_tokens": null
+      },
+      "turn_metrics": [
+        {
+          "elapsed_ms": 16.0,
+          "tool_calls": 3,
+          "model_rounds": 0,
+          "input_tokens": null,
+          "output_tokens": null
+        }
+      ],
+      "observed": {
+        "status": "completed",
+        "answer": "已核查 PO-1012：发现 1 项到货异常，0 项待核实信息。",
+        "order_id": "PO-1012",
+        "facts": {
+          "supplier_name": "模拟供应商02",
+          "material_code": "MAT-CONNECTOR-02",
+          "ordered_qty": 250,
+          "received_qty": 100,
+          "outstanding_qty": 150,
+          "promised_date": "2026-10-24",
+          "overdue_days": 0
+        },
+        "anomaly_codes": [
+          "LOGISTICS_EXCEPTION"
+        ]
+      }
+    },
+    {
+      "id": "E13",
+      "name": "数量提问",
+      "passed": true,
+      "errors": [],
+      "fault_injection": null,
+      "live_cloud_model": false,
+      "metrics": {
+        "elapsed_ms": 15.0,
+        "tool_calls": 3,
+        "model_rounds": 0,
+        "input_tokens": null,
+        "output_tokens": null
+      },
+      "turn_metrics": [
+        {
+          "elapsed_ms": 15.0,
+          "tool_calls": 3,
+          "model_rounds": 0,
+          "input_tokens": null,
+          "output_tokens": null
+        }
+      ],
+      "observed": {
+        "status": "completed",
+        "answer": "已核查 PO-1001：发现 2 项到货异常，0 项待核实信息。",
+        "order_id": "PO-1001",
+        "facts": {
+          "supplier_name": "模拟供应商01",
+          "material_code": "MAT-SENSOR-01",
+          "ordered_qty": 1000,
+          "received_qty": 600,
+          "outstanding_qty": 400,
+          "promised_date": "2026-10-22",
+          "overdue_days": 2
+        },
+        "anomaly_codes": [
+          "OVERDUE_UNRECEIVED",
+          "LOGISTICS_EXCEPTION"
+        ]
+      }
+    },
+    {
+      "id": "E14",
+      "name": "中文无空格解析",
+      "passed": true,
+      "errors": [],
+      "fault_injection": null,
+      "live_cloud_model": false,
+      "metrics": {
+        "elapsed_ms": 16.0,
+        "tool_calls": 3,
+        "model_rounds": 0,
+        "input_tokens": null,
+        "output_tokens": null
+      },
+      "turn_metrics": [
+        {
+          "elapsed_ms": 16.0,
+          "tool_calls": 3,
+          "model_rounds": 0,
+          "input_tokens": null,
+          "output_tokens": null
+        }
+      ],
+      "observed": {
+        "status": "completed",
+        "answer": "已核查 PO-1001：发现 2 项到货异常，0 项待核实信息。",
+        "order_id": "PO-1001",
+        "facts": {
+          "supplier_name": "模拟供应商01",
+          "material_code": "MAT-SENSOR-01",
+          "ordered_qty": 1000,
+          "received_qty": 600,
+          "outstanding_qty": 400,
+          "promised_date": "2026-10-22",
+          "overdue_days": 2
+        },
+        "anomaly_codes": [
+          "OVERDUE_UNRECEIVED",
+          "LOGISTICS_EXCEPTION"
+        ]
+      }
+    },
+    {
+      "id": "E15",
+      "name": "多轮供应商跟进",
+      "passed": true,
+      "errors": [],
+      "fault_injection": null,
+      "live_cloud_model": false,
+      "metrics": {
+        "elapsed_ms": 16.0,
+        "tool_calls": 3,
+        "model_rounds": 0,
+        "input_tokens": null,
+        "output_tokens": null
+      },
+      "turn_metrics": [
+        {
+          "elapsed_ms": 15.0,
+          "tool_calls": 3,
+          "model_rounds": 0,
+          "input_tokens": null,
+          "output_tokens": null
+        },
+        {
+          "elapsed_ms": 16.0,
+          "tool_calls": 3,
+          "model_rounds": 0,
+          "input_tokens": null,
+          "output_tokens": null
+        }
+      ],
+      "observed": {
+        "status": "completed",
+        "answer": "已核查 PO-1001：发现 2 项到货异常，0 项待核实信息。已生成供应商跟进草稿，可在报告中查看和下载。",
+        "order_id": "PO-1001",
+        "facts": {
+          "supplier_name": "模拟供应商01",
+          "material_code": "MAT-SENSOR-01",
+          "ordered_qty": 1000,
+          "received_qty": 600,
+          "outstanding_qty": 400,
+          "promised_date": "2026-10-22",
+          "overdue_days": 2
+        },
+        "anomaly_codes": [
+          "OVERDUE_UNRECEIVED",
+          "LOGISTICS_EXCEPTION"
+        ]
+      }
+    },
+    {
+      "id": "E16",
+      "name": "明确切换订单",
+      "passed": true,
+      "errors": [],
+      "fault_injection": null,
+      "live_cloud_model": false,
+      "metrics": {
+        "elapsed_ms": 15.0,
+        "tool_calls": 3,
+        "model_rounds": 0,
+        "input_tokens": null,
+        "output_tokens": null
+      },
+      "turn_metrics": [
+        {
+          "elapsed_ms": 16.0,
+          "tool_calls": 3,
+          "model_rounds": 0,
+          "input_tokens": null,
+          "output_tokens": null
+        },
+        {
+          "elapsed_ms": 15.0,
+          "tool_calls": 3,
+          "model_rounds": 0,
+          "input_tokens": null,
+          "output_tokens": null
+        }
+      ],
+      "observed": {
+        "status": "completed",
+        "answer": "已核查 PO-1004：发现 1 项到货异常，0 项待核实信息。",
+        "order_id": "PO-1004",
+        "facts": {
+          "supplier_name": "模拟供应商04",
+          "material_code": "MAT-BRACKET-04",
+          "ordered_qty": 600,
+          "received_qty": 0,
+          "outstanding_qty": 600,
+          "promised_date": "2026-10-26",
+          "overdue_days": 0
+        },
+        "anomaly_codes": [
+          "ETA_DELAY_RISK"
+        ]
+      }
+    },
+    {
+      "id": "E17",
+      "name": "未提供单号需追问",
+      "passed": true,
+      "errors": [],
+      "fault_injection": null,
+      "live_cloud_model": false,
+      "metrics": {
+        "elapsed_ms": 0.0,
+        "tool_calls": 0,
+        "model_rounds": 0,
+        "input_tokens": null,
+        "output_tokens": null
+      },
+      "turn_metrics": [
+        {
+          "elapsed_ms": 0.0,
+          "tool_calls": 0,
+          "model_rounds": 0,
+          "input_tokens": null,
+          "output_tokens": null
+        }
+      ],
+      "observed": {
+        "status": "needs_input",
+        "answer": "请提供采购单号，例如：分析 PO-1001 为什么还没到齐。",
+        "order_id": null,
+        "facts": null,
+        "anomaly_codes": []
+      }
+    },
+    {
+      "id": "E18",
+      "name": "不存在订单",
+      "passed": true,
+      "errors": [],
+      "fault_injection": null,
+      "live_cloud_model": false,
+      "metrics": {
+        "elapsed_ms": 0.0,
+        "tool_calls": 1,
+        "model_rounds": 0,
+        "input_tokens": null,
+        "output_tokens": null
+      },
+      "turn_metrics": [
+        {
+          "elapsed_ms": 0.0,
+          "tool_calls": 1,
+          "model_rounds": 0,
+          "input_tokens": null,
+          "output_tokens": null
+        }
+      ],
+      "observed": {
+        "status": "failed",
+        "answer": "未找到采购单 PO-9999，请核对单号；未生成分析结论。",
+        "order_id": null,
+        "facts": null,
+        "anomaly_codes": []
+      }
+    },
+    {
+      "id": "E19",
+      "name": "多个单号需确认",
+      "passed": true,
+      "errors": [],
+      "fault_injection": null,
+      "live_cloud_model": false,
+      "metrics": {
+        "elapsed_ms": 0.0,
+        "tool_calls": 0,
+        "model_rounds": 0,
+        "input_tokens": null,
+        "output_tokens": null
+      },
+      "turn_metrics": [
+        {
+          "elapsed_ms": 0.0,
+          "tool_calls": 0,
+          "model_rounds": 0,
+          "input_tokens": null,
+          "output_tokens": null
+        }
+      ],
+      "observed": {
+        "status": "needs_input",
+        "answer": "本次请指定一张采购单，例如 PO-1001；检测到多个单号，需要确认分析对象。",
+        "order_id": null,
+        "facts": null,
+        "anomaly_codes": []
+      }
+    },
+    {
+      "id": "E20",
+      "name": "错误单号格式",
+      "passed": true,
+      "errors": [],
+      "fault_injection": null,
+      "live_cloud_model": false,
+      "metrics": {
+        "elapsed_ms": 0.0,
+        "tool_calls": 0,
+        "model_rounds": 0,
+        "input_tokens": null,
+        "output_tokens": null
+      },
+      "turn_metrics": [
+        {
+          "elapsed_ms": 0.0,
+          "tool_calls": 0,
+          "model_rounds": 0,
+          "input_tokens": null,
+          "output_tokens": null
+        }
+      ],
+      "observed": {
+        "status": "needs_input",
+        "answer": "采购单号格式应为 PO-1001，请提供有效单号。",
+        "order_id": null,
+        "facts": null,
+        "anomaly_codes": []
+      }
+    },
+    {
+      "id": "E21",
+      "name": "单号大小写规范化",
+      "passed": true,
+      "errors": [],
+      "fault_injection": null,
+      "live_cloud_model": false,
+      "metrics": {
+        "elapsed_ms": 16.0,
+        "tool_calls": 3,
+        "model_rounds": 0,
+        "input_tokens": null,
+        "output_tokens": null
+      },
+      "turn_metrics": [
+        {
+          "elapsed_ms": 16.0,
+          "tool_calls": 3,
+          "model_rounds": 0,
+          "input_tokens": null,
+          "output_tokens": null
+        }
+      ],
+      "observed": {
+        "status": "completed",
+        "answer": "已核查 PO-1001：发现 2 项到货异常，0 项待核实信息。",
+        "order_id": "PO-1001",
+        "facts": {
+          "supplier_name": "模拟供应商01",
+          "material_code": "MAT-SENSOR-01",
+          "ordered_qty": 1000,
+          "received_qty": 600,
+          "outstanding_qty": 400,
+          "promised_date": "2026-10-22",
+          "overdue_days": 2
+        },
+        "anomaly_codes": [
+          "OVERDUE_UNRECEIVED",
+          "LOGISTICS_EXCEPTION"
+        ]
+      }
+    },
+    {
+      "id": "E22",
+      "name": "失效会话不沿用订单",
+      "passed": true,
+      "errors": [],
+      "fault_injection": null,
+      "live_cloud_model": false,
+      "metrics": {
+        "elapsed_ms": 0.0,
+        "tool_calls": 0,
+        "model_rounds": 0,
+        "input_tokens": null,
+        "output_tokens": null
+      },
+      "turn_metrics": [
+        {
+          "elapsed_ms": 0.0,
+          "tool_calls": 0,
+          "model_rounds": 0,
+          "input_tokens": null,
+          "output_tokens": null
+        }
+      ],
+      "observed": {
+        "status": "needs_input",
+        "answer": "服务已重启或原会话已失效。请提供采购单号，例如：分析 PO-1001 为什么还没到齐。",
+        "order_id": null,
+        "facts": null,
+        "anomaly_codes": []
+      }
+    },
+    {
+      "id": "E23",
+      "name": "未知订单后清空上下文",
+      "passed": true,
+      "errors": [],
+      "fault_injection": null,
+      "live_cloud_model": false,
+      "metrics": {
+        "elapsed_ms": 0.0,
+        "tool_calls": 0,
+        "model_rounds": 0,
+        "input_tokens": null,
+        "output_tokens": null
+      },
+      "turn_metrics": [
+        {
+          "elapsed_ms": 16.0,
+          "tool_calls": 3,
+          "model_rounds": 0,
+          "input_tokens": null,
+          "output_tokens": null
+        },
+        {
+          "elapsed_ms": 15.0,
+          "tool_calls": 1,
+          "model_rounds": 0,
+          "input_tokens": null,
+          "output_tokens": null
+        },
+        {
+          "elapsed_ms": 0.0,
+          "tool_calls": 0,
+          "model_rounds": 0,
+          "input_tokens": null,
+          "output_tokens": null
+        }
+      ],
+      "observed": {
+        "status": "needs_input",
+        "answer": "请提供采购单号，例如：分析 PO-1001 为什么还没到齐。",
+        "order_id": null,
+        "facts": null,
+        "anomaly_codes": []
+      }
+    },
+    {
+      "id": "E24",
+      "name": "拒绝伪造定性根因",
+      "passed": true,
+      "errors": [],
+      "fault_injection": null,
+      "live_cloud_model": false,
+      "metrics": {
+        "elapsed_ms": 16.0,
+        "tool_calls": 3,
+        "model_rounds": 0,
+        "input_tokens": null,
+        "output_tokens": null
+      },
+      "turn_metrics": [
+        {
+          "elapsed_ms": 16.0,
+          "tool_calls": 3,
+          "model_rounds": 0,
+          "input_tokens": null,
+          "output_tokens": null
+        }
+      ],
+      "observed": {
+        "status": "completed",
+        "answer": "已核查 PO-1001：发现 2 项到货异常，0 项待核实信息。",
+        "order_id": "PO-1001",
+        "facts": {
+          "supplier_name": "模拟供应商01",
+          "material_code": "MAT-SENSOR-01",
+          "ordered_qty": 1000,
+          "received_qty": 600,
+          "outstanding_qty": 400,
+          "promised_date": "2026-10-22",
+          "overdue_days": 2
+        },
+        "anomaly_codes": [
+          "OVERDUE_UNRECEIVED",
+          "LOGISTICS_EXCEPTION"
+        ]
+      }
+    },
+    {
+      "id": "E25",
+      "name": "用户要求篡改数量",
+      "passed": true,
+      "errors": [],
+      "fault_injection": null,
+      "live_cloud_model": false,
+      "metrics": {
+        "elapsed_ms": 15.0,
+        "tool_calls": 3,
+        "model_rounds": 0,
+        "input_tokens": null,
+        "output_tokens": null
+      },
+      "turn_metrics": [
+        {
+          "elapsed_ms": 15.0,
+          "tool_calls": 3,
+          "model_rounds": 0,
+          "input_tokens": null,
+          "output_tokens": null
+        }
+      ],
+      "observed": {
+        "status": "completed",
+        "answer": "已核查 PO-1001：发现 2 项到货异常，0 项待核实信息。",
+        "order_id": "PO-1001",
+        "facts": {
+          "supplier_name": "模拟供应商01",
+          "material_code": "MAT-SENSOR-01",
+          "ordered_qty": 1000,
+          "received_qty": 600,
+          "outstanding_qty": 400,
+          "promised_date": "2026-10-22",
+          "overdue_days": 2
+        },
+        "anomaly_codes": [
+          "OVERDUE_UNRECEIVED",
+          "LOGISTICS_EXCEPTION"
+        ]
+      }
+    },
+    {
+      "id": "E26",
+      "name": "检索无结果保留事实",
+      "passed": true,
+      "errors": [],
+      "fault_injection": "missing_sop",
+      "live_cloud_model": false,
+      "metrics": {
+        "elapsed_ms": 16.0,
+        "tool_calls": 3,
+        "model_rounds": 0,
+        "input_tokens": null,
+        "output_tokens": null
+      },
+      "turn_metrics": [
+        {
+          "elapsed_ms": 16.0,
+          "tool_calls": 3,
+          "model_rounds": 0,
+          "input_tokens": null,
+          "output_tokens": null
+        }
+      ],
+      "observed": {
+        "status": "completed",
+        "answer": "已核查 PO-1001：发现 2 项到货异常，0 项待核实信息。",
+        "order_id": "PO-1001",
+        "facts": {
+          "supplier_name": "模拟供应商01",
+          "material_code": "MAT-SENSOR-01",
+          "ordered_qty": 1000,
+          "received_qty": 600,
+          "outstanding_qty": 400,
+          "promised_date": "2026-10-22",
+          "overdue_days": 2
+        },
+        "anomaly_codes": [
+          "OVERDUE_UNRECEIVED",
+          "LOGISTICS_EXCEPTION"
+        ]
+      }
+    },
+    {
+      "id": "E27",
+      "name": "检索失败部分完成",
+      "passed": true,
+      "errors": [],
+      "fault_injection": "retrieval_failure",
+      "live_cloud_model": false,
+      "metrics": {
+        "elapsed_ms": 0.0,
+        "tool_calls": 3,
+        "model_rounds": 0,
+        "input_tokens": null,
+        "output_tokens": null
+      },
+      "turn_metrics": [
+        {
+          "elapsed_ms": 0.0,
+          "tool_calls": 3,
+          "model_rounds": 0,
+          "input_tokens": null,
+          "output_tokens": null
+        }
+      ],
+      "observed": {
+        "status": "partial",
+        "answer": "已核查 PO-1001：发现 2 项到货异常，0 项待核实信息。",
+        "order_id": "PO-1001",
+        "facts": {
+          "supplier_name": "模拟供应商01",
+          "material_code": "MAT-SENSOR-01",
+          "ordered_qty": 1000,
+          "received_qty": 600,
+          "outstanding_qty": 400,
+          "promised_date": "2026-10-22",
+          "overdue_days": 2
+        },
+        "anomaly_codes": [
+          "OVERDUE_UNRECEIVED",
+          "LOGISTICS_EXCEPTION"
+        ]
+      }
+    },
+    {
+      "id": "E28",
+      "name": "计算工具失败",
+      "passed": true,
+      "errors": [],
+      "fault_injection": "calculation_failure",
+      "live_cloud_model": false,
+      "metrics": {
+        "elapsed_ms": 16.0,
+        "tool_calls": 3,
+        "model_rounds": 0,
+        "input_tokens": null,
+        "output_tokens": null
+      },
+      "turn_metrics": [
+        {
+          "elapsed_ms": 16.0,
+          "tool_calls": 3,
+          "model_rounds": 0,
+          "input_tokens": null,
+          "output_tokens": null
+        }
+      ],
+      "observed": {
+        "status": "partial",
+        "answer": "工具 analyze_arrival 执行失败（RuntimeError） 本次执行未能完成（RuntimeError），请检查执行记录和服务配置。",
+        "order_id": null,
+        "facts": null,
+        "anomaly_codes": []
+      }
+    },
+    {
+      "id": "E29",
+      "name": "总请求超时",
+      "passed": true,
+      "errors": [],
+      "fault_injection": "request_timeout",
+      "live_cloud_model": false,
+      "metrics": {
+        "elapsed_ms": 78.0,
+        "tool_calls": 1,
+        "model_rounds": 0,
+        "input_tokens": null,
+        "output_tokens": null
+      },
+      "turn_metrics": [
+        {
+          "elapsed_ms": 78.0,
+          "tool_calls": 1,
+          "model_rounds": 0,
+          "input_tokens": null,
+          "output_tokens": null
+        }
+      ],
+      "observed": {
+        "status": "partial",
+        "answer": "本次执行达到时间或调用上限，请重试；已完成的核查保留在执行记录中。",
+        "order_id": null,
+        "facts": null,
+        "anomaly_codes": []
+      }
+    },
+    {
+      "id": "E30",
+      "name": "模型超时协议故障注入",
+      "passed": true,
+      "errors": [],
+      "fault_injection": "model_timeout",
+      "live_cloud_model": false,
+      "metrics": {
+        "elapsed_ms": 32.0,
+        "tool_calls": 1,
+        "model_rounds": 1,
+        "input_tokens": null,
+        "output_tokens": null
+      },
+      "turn_metrics": [
+        {
+          "elapsed_ms": 32.0,
+          "tool_calls": 1,
+          "model_rounds": 1,
+          "input_tokens": null,
+          "output_tokens": null
+        }
+      ],
+      "observed": {
+        "status": "partial",
+        "answer": "本次执行达到时间或调用上限，请重试；已完成的核查保留在执行记录中。",
+        "order_id": null,
+        "facts": null,
+        "anomaly_codes": []
+      }
+    }
+  ]
+}

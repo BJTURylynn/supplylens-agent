@@ -1,0 +1,572 @@
+{
+  "session_id": "a624784e1f834acea9f0fe8fa8b564f6",
+  "run_id": "d8d5e353e06140c194ac9aa240bc907e",
+  "status": "completed",
+  "answer": "已核查 PO-1001：发现 2 项到货异常，0 项待核实信息。",
+  "report": {
+    "order_id": "PO-1001",
+    "as_of": "2026-10-24",
+    "facts": {
+      "supplier_name": "模拟供应商01",
+      "material_code": "MAT-SENSOR-01",
+      "ordered_qty": 1000,
+      "received_qty": 600,
+      "outstanding_qty": 400,
+      "promised_date": "2026-10-22",
+      "overdue_days": 2
+    },
+    "anomalies": [
+      {
+        "code": "OVERDUE_UNRECEIVED",
+        "title": "逾期未收齐",
+        "detail": "承诺到货日为 2026-10-22；截至 2026-10-24 尚有 400 件未收货，逾期 2 天。",
+        "shipment_id": null,
+        "evidence_ids": [
+          "PO:PO-1001",
+          "CALC:PO-1001:2026-10-24"
+        ]
+      },
+      {
+        "code": "LOGISTICS_EXCEPTION",
+        "title": "物流显式异常",
+        "detail": "发运单 SH-1001-B 最新物流状态为滞留；记录备注：承运商记录：中转场滞留，原因待核实。。备注仅为记录信息，根因仍需核实。",
+        "shipment_id": "SH-1001-B",
+        "evidence_ids": [
+          "SHIPMENT:SH-1001-B",
+          "EVENT:EV-1001-B-1",
+          "CALC:PO-1001:2026-10-24"
+        ]
+      }
+    ],
+    "data_gaps": [],
+    "evidence": [
+      {
+        "id": "PO:PO-1001",
+        "source": "purchase_orders",
+        "description": "采购订单与承诺到货日",
+        "fields": {
+          "id": "PO-1001",
+          "supplier_id": "SUP-01",
+          "supplier_name": "模拟供应商01",
+          "material_code": "MAT-SENSOR-01",
+          "qty": 1000,
+          "promised_date": "2026-10-22",
+          "created_at": "2026-10-01T09:00:00+08:00",
+          "as_of": "2026-10-24"
+        }
+      },
+      {
+        "id": "SHIPMENT:SH-1001-A",
+        "source": "shipments",
+        "description": "已发运批次与数量",
+        "fields": {
+          "id": "SH-1001-A",
+          "order_id": "PO-1001",
+          "qty": 600,
+          "shipped_at": "2026-10-20T08:00:00+08:00"
+        }
+      },
+      {
+        "id": "ETA:ETA-1001-A-1",
+        "source": "eta_history",
+        "description": "快照时已知的最新 ETA 版本",
+        "fields": {
+          "id": "ETA-1001-A-1",
+          "shipment_id": "SH-1001-A",
+          "eta": "2026-10-22",
+          "updated_at": "2026-10-20T09:00:00+08:00"
+        }
+      },
+      {
+        "id": "EVENT:EV-1001-A-1",
+        "source": "logistics_events",
+        "description": "该批次最新物流事件",
+        "fields": {
+          "shipment_id": "SH-1001-A",
+          "id": "EV-1001-A-1",
+          "status": "delivered",
+          "event_time": "2026-10-22T10:00:00+08:00",
+          "note": "承运商记录：已签收。"
+        }
+      },
+      {
+        "id": "SHIPMENT:SH-1001-B",
+        "source": "shipments",
+        "description": "已发运批次与数量",
+        "fields": {
+          "id": "SH-1001-B",
+          "order_id": "PO-1001",
+          "qty": 400,
+          "shipped_at": "2026-10-20T08:00:00+08:00"
+        }
+      },
+      {
+        "id": "ETA:ETA-1001-B-1",
+        "source": "eta_history",
+        "description": "快照时已知的最新 ETA 版本",
+        "fields": {
+          "id": "ETA-1001-B-1",
+          "shipment_id": "SH-1001-B",
+          "eta": "2026-10-27",
+          "updated_at": "2026-10-20T09:00:00+08:00"
+        }
+      },
+      {
+        "id": "EVENT:EV-1001-B-1",
+        "source": "logistics_events",
+        "description": "该批次最新物流事件",
+        "fields": {
+          "shipment_id": "SH-1001-B",
+          "id": "EV-1001-B-1",
+          "status": "held",
+          "event_time": "2026-10-24T10:00:00+08:00",
+          "note": "承运商记录：中转场滞留，原因待核实。"
+        }
+      },
+      {
+        "id": "RECEIPT:RC-1001-A-1",
+        "source": "receipts",
+        "description": "已登记收货记录",
+        "fields": {
+          "id": "RC-1001-A-1",
+          "shipment_id": "SH-1001-A",
+          "qty": 600,
+          "received_at": "2026-10-22T15:00:00+08:00"
+        }
+      },
+      {
+        "id": "CALC:PO-1001:2026-10-24",
+        "source": "arrival_rules",
+        "description": "固定快照下的收货汇总与逾期计算",
+        "fields": {
+          "order_id": "PO-1001",
+          "as_of": "2026-10-24",
+          "supplier_name": "模拟供应商01",
+          "material_code": "MAT-SENSOR-01",
+          "ordered_qty": 1000,
+          "received_qty": 600,
+          "outstanding_qty": 400,
+          "promised_date": "2026-10-22",
+          "overdue_days": 2,
+          "formula": "received=sum(receipts.qty); outstanding=ordered-received; overdue=max(as_of-promised,0) if outstanding>0 else 0",
+          "input_evidence_ids": [
+            "PO:PO-1001",
+            "RECEIPT:RC-1001-A-1"
+          ]
+        }
+      }
+    ],
+    "sop_refs": [
+      {
+        "id": "sop:a1288d9482f5e89a:000",
+        "document": "08_supplier_followup.md",
+        "title": "供应商跟进建议与沟通草稿 / 供应商跟进规则",
+        "text": "## 供应商跟进规则\n\n业务规则：跟进建议必须建立在本次分析结果及相关 SOP 上，明确区分事实、风险、缺失信息和建议。草稿应包含订单号、物料、承诺日、已收与待交数量、需要确认的问题、期望回复时间和后续负责人。对未知字段使用“请确认”或“待补充”，不得编造已经联系供应商、已经催办、已经获得承诺等执行记录。",
+        "source_type": "sop",
+        "score": 0.263246
+      },
+      {
+        "id": "sop:21df450b76ccbe09:000",
+        "document": "03_logistics_exception.md",
+        "title": "物流异常与运输阻塞处理 / 物流异常跟进建议",
+        "text": "## 物流异常跟进建议\n\n向供应商或承运方核实运单、异常地点、发生时间、原因证据和恢复运输时间；需要替换运力或改道时由业务方审批。报告引用当前物流事件 ID 和发运批次 ID，区分“系统记录异常”与“责任原因待核实”。建议下一次更新时间和负责人由对方明确确认；不得把风险直接描述为供应商失信，也不得凭空推算罚款或赔偿。",
+        "source_type": "sop",
+        "score": 0.239258
+      },
+      {
+        "id": "sop:9805ce339bf6836b:000",
+        "document": "08_supplier_followup.md",
+        "title": "供应商跟进建议与沟通草稿 / 供应商沟通草稿建议",
+        "text": "## 供应商沟通草稿建议\n\n可参考：“您好，关于订单〔订单号〕，截至〔基准日〕系统记录已收〔数量〕，尚余〔数量〕。目前发现〔有证据的异常或数据缺口〕，请协助核对未交批次、最新预计到货日期及恢复计划，并确认可回复的时间。相关数据如有差异，请提供对应运单或签收记录。”仅在分析中确有问题时填写异常；已收齐且无当前异常则建议归档核对，无需机械催交。每条行动建议应附支持它的 SOP 段落 ID，由人审阅后决定是否联系。",
+        "source_type": "sop",
+        "score": 0.233189
+      }
+    ],
+    "actions": [
+      {
+        "text": "业务规则：跟进建议必须建立在本次分析结果及相关 SOP 上，明确区分事实、风险、缺失信息和建议。草稿应包含订单号、物料、承诺日、已收与待交数量、需要确认的问题、期望回复时间和后续负责人。对未知字段使用“请确认”或“待补充”，不得编造已经联系供应商、已经催办、已经获得承诺等执行记录。",
+        "sop_ids": [
+          "sop:a1288d9482f5e89a:000"
+        ]
+      },
+      {
+        "text": "向供应商或承运方核实运单、异常地点、发生时间、原因证据和恢复运输时间；需要替换运力或改道时由业务方审批。报告引用当前物流事件 ID 和发运批次 ID，区分“系统记录异常”与“责任原因待核实”。建议下一次更新时间和负责人由对方明确确认；不得把风险直接描述为供应商失信，也不得凭空推算罚款或赔偿。",
+        "sop_ids": [
+          "sop:21df450b76ccbe09:000"
+        ]
+      },
+      {
+        "text": "可参考：“您好，关于订单〔订单号〕，截至〔基准日〕系统记录已收〔数量〕，尚余〔数量〕。目前发现〔有证据的异常或数据缺口〕，请协助核对未交批次、最新预计到货日期及恢复计划，并确认可回复的时间。相关数据如有差异，请提供对应运单或签收记录。”仅在分析中确有问题时填写异常；已收齐且无当前异常则建议归档核对，无需机械催交。每条行动建议应附支持它的 SOP 段落 ID，由人审阅后决定是否联系。",
+        "sop_ids": [
+          "sop:9805ce339bf6836b:000"
+        ]
+      }
+    ],
+    "followup_draft": null,
+    "notes": [
+      "原因与责任归属需要业务记录或人工核实，流程文档仅用于处理建议。",
+      "处理建议选自本次检索的模拟流程原文，需人工核实后执行。"
+    ]
+  },
+  "markdown": "# PO-1001 采购到货分析\n\n> **模拟数据 / 自编模拟流程** · 截至 2026-10-24 当日结束（Asia/Shanghai）\n> 运行模式：无模型规则演示（非云端模型评测）\n\n## 订单概况\n\n| 项目 | 数值 |\n|---|---|\n| 供应商 | 模拟供应商01 |\n| 物料 | MAT-SENSOR-01 |\n| 采购数量 | 1000 |\n| 已收数量 | 600 |\n| 未收数量 | 400 |\n| 承诺到货日 | 2026-10-22 |\n| 逾期天数 | 2 |\n\n## 已确认异常\n\n- **逾期未收齐**：承诺到货日为 2026-10-22；截至 2026-10-24 尚有 400 件未收货，逾期 2 天。 [PO:PO-1001]、[CALC:PO-1001:2026-10-24]\n- **物流显式异常**：发运单 SH-1001-B 最新物流状态为滞留；记录备注：承运商记录：中转场滞留，原因待核实。。备注仅为记录信息，根因仍需核实。 [SHIPMENT:SH-1001-B]、[EVENT:EV-1001-B-1]、[CALC:PO-1001:2026-10-24]\n\n## 待核实信息\n\n- 当前快照无已识别的关键数据缺口。\n\n## 处理建议\n\n- 业务规则：跟进建议必须建立在本次分析结果及相关 SOP 上，明确区分事实、风险、缺失信息和建议。草稿应包含订单号、物料、承诺日、已收与待交数量、需要确认的问题、期望回复时间和后续负责人。对未知字段使用“请确认”或“待补充”，不得编造已经联系供应商、已经催办、已经获得承诺等执行记录。 [sop:a1288d9482f5e89a:000]\n- 向供应商或承运方核实运单、异常地点、发生时间、原因证据和恢复运输时间；需要替换运力或改道时由业务方审批。报告引用当前物流事件 ID 和发运批次 ID，区分“系统记录异常”与“责任原因待核实”。建议下一次更新时间和负责人由对方明确确认；不得把风险直接描述为供应商失信，也不得凭空推算罚款或赔偿。 [sop:21df450b76ccbe09:000]\n- 可参考：“您好，关于订单〔订单号〕，截至〔基准日〕系统记录已收〔数量〕，尚余〔数量〕。目前发现〔有证据的异常或数据缺口〕，请协助核对未交批次、最新预计到货日期及恢复计划，并确认可回复的时间。相关数据如有差异，请提供对应运单或签收记录。”仅在分析中确有问题时填写异常；已收齐且无当前异常则建议归档核对，无需机械催交。每条行动建议应附支持它的 SOP 段落 ID，由人审阅后决定是否联系。 [sop:9805ce339bf6836b:000]\n\n## 数据证据\n\n- **[PO:PO-1001]** 采购订单与承诺到货日 — `purchase_orders`：{'id': 'PO-1001', 'supplier_id': 'SUP-01', 'supplier_name': '模拟供应商01', 'material_code': 'MAT-SENSOR-01', 'qty': 1000, 'promised_date': '2026-10-22', 'created_at': '2026-10-01T09:00:00+08:00', 'as_of': '2026-10-24'}\n- **[SHIPMENT:SH-1001-A]** 已发运批次与数量 — `shipments`：{'id': 'SH-1001-A', 'order_id': 'PO-1001', 'qty': 600, 'shipped_at': '2026-10-20T08:00:00+08:00'}\n- **[ETA:ETA-1001-A-1]** 快照时已知的最新 ETA 版本 — `eta_history`：{'id': 'ETA-1001-A-1', 'shipment_id': 'SH-1001-A', 'eta': '2026-10-22', 'updated_at': '2026-10-20T09:00:00+08:00'}\n- **[EVENT:EV-1001-A-1]** 该批次最新物流事件 — `logistics_events`：{'shipment_id': 'SH-1001-A', 'id': 'EV-1001-A-1', 'status': 'delivered', 'event_time': '2026-10-22T10:00:00+08:00', 'note': '承运商记录：已签收。'}\n- **[SHIPMENT:SH-1001-B]** 已发运批次与数量 — `shipments`：{'id': 'SH-1001-B', 'order_id': 'PO-1001', 'qty': 400, 'shipped_at': '2026-10-20T08:00:00+08:00'}\n- **[ETA:ETA-1001-B-1]** 快照时已知的最新 ETA 版本 — `eta_history`：{'id': 'ETA-1001-B-1', 'shipment_id': 'SH-1001-B', 'eta': '2026-10-27', 'updated_at': '2026-10-20T09:00:00+08:00'}\n- **[EVENT:EV-1001-B-1]** 该批次最新物流事件 — `logistics_events`：{'shipment_id': 'SH-1001-B', 'id': 'EV-1001-B-1', 'status': 'held', 'event_time': '2026-10-24T10:00:00+08:00', 'note': '承运商记录：中转场滞留，原因待核实。'}\n- **[RECEIPT:RC-1001-A-1]** 已登记收货记录 — `receipts`：{'id': 'RC-1001-A-1', 'shipment_id': 'SH-1001-A', 'qty': 600, 'received_at': '2026-10-22T15:00:00+08:00'}\n- **[CALC:PO-1001:2026-10-24]** 固定快照下的收货汇总与逾期计算 — `arrival_rules`：{'order_id': 'PO-1001', 'as_of': '2026-10-24', 'supplier_name': '模拟供应商01', 'material_code': 'MAT-SENSOR-01', 'ordered_qty': 1000, 'received_qty': 600, 'outstanding_qty': 400, 'promised_date': '2026-10-22', 'overdue_days': 2, 'formula': 'received=sum(receipts.qty); outstanding=ordered-received; overdue=max(as_of-promised,0) if outstanding>0 else 0', 'input_evidence_ids': ['PO:PO-1001', 'RECEIPT:RC-1001-A-1']}\n\n## 流程引用\n\n### [sop:a1288d9482f5e89a:000] 供应商跟进建议与沟通草稿 / 供应商跟进规则\n来源：08_supplier_followup.md\n\n## 供应商跟进规则\n\n业务规则：跟进建议必须建立在本次分析结果及相关 SOP 上，明确区分事实、风险、缺失信息和建议。草稿应包含订单号、物料、承诺日、已收与待交数量、需要确认的问题、期望回复时间和后续负责人。对未知字段使用“请确认”或“待补充”，不得编造已经联系供应商、已经催办、已经获得承诺等执行记录。\n\n### [sop:21df450b76ccbe09:000] 物流异常与运输阻塞处理 / 物流异常跟进建议\n来源：03_logistics_exception.md\n\n## 物流异常跟进建议\n\n向供应商或承运方核实运单、异常地点、发生时间、原因证据和恢复运输时间；需要替换运力或改道时由业务方审批。报告引用当前物流事件 ID 和发运批次 ID，区分“系统记录异常”与“责任原因待核实”。建议下一次更新时间和负责人由对方明确确认；不得把风险直接描述为供应商失信，也不得凭空推算罚款或赔偿。\n\n### [sop:9805ce339bf6836b:000] 供应商跟进建议与沟通草稿 / 供应商沟通草稿建议\n来源：08_supplier_followup.md\n\n## 供应商沟通草稿建议\n\n可参考：“您好，关于订单〔订单号〕，截至〔基准日〕系统记录已收〔数量〕，尚余〔数量〕。目前发现〔有证据的异常或数据缺口〕，请协助核对未交批次、最新预计到货日期及恢复计划，并确认可回复的时间。相关数据如有差异，请提供对应运单或签收记录。”仅在分析中确有问题时填写异常；已收齐且无当前异常则建议归档核对，无需机械催交。每条行动建议应附支持它的 SOP 段落 ID，由人审阅后决定是否联系。\n\n\n## 说明\n\n- 原因与责任归属需要业务记录或人工核实，流程文档仅用于处理建议。\n- 处理建议选自本次检索的模拟流程原文，需人工核实后执行。\n",
+  "metrics": {
+    "elapsed_ms": 31.0,
+    "tool_calls": 3,
+    "model_rounds": 0,
+    "input_tokens": null,
+    "output_tokens": null
+  },
+  "mode": "demo",
+  "session_reset": false,
+  "steps": [
+    {
+      "name": "get_order_snapshot",
+      "arguments": {
+        "order_id": "PO-1001"
+      },
+      "result": {
+        "order_id": "PO-1001",
+        "supplier_id": "SUP-01",
+        "supplier_name": "模拟供应商01",
+        "material_code": "MAT-SENSOR-01",
+        "ordered_qty": 1000,
+        "promised_date": "2026-10-22",
+        "as_of": "2026-10-24",
+        "shipments": [
+          {
+            "id": "SH-1001-A",
+            "qty": 600,
+            "shipped_at": "2026-10-20T08:00:00+08:00",
+            "eta": "2026-10-22",
+            "eta_updated_at": "2026-10-20T09:00:00+08:00",
+            "eta_evidence_id": "ETA:ETA-1001-A-1",
+            "latest_event": {
+              "id": "EV-1001-A-1",
+              "status": "delivered",
+              "event_time": "2026-10-22T10:00:00+08:00",
+              "note": "承运商记录：已签收。"
+            }
+          },
+          {
+            "id": "SH-1001-B",
+            "qty": 400,
+            "shipped_at": "2026-10-20T08:00:00+08:00",
+            "eta": "2026-10-27",
+            "eta_updated_at": "2026-10-20T09:00:00+08:00",
+            "eta_evidence_id": "ETA:ETA-1001-B-1",
+            "latest_event": {
+              "id": "EV-1001-B-1",
+              "status": "held",
+              "event_time": "2026-10-24T10:00:00+08:00",
+              "note": "承运商记录：中转场滞留，原因待核实。"
+            }
+          }
+        ],
+        "receipts": [
+          {
+            "id": "RC-1001-A-1",
+            "shipment_id": "SH-1001-A",
+            "qty": 600,
+            "received_at": "2026-10-22T15:00:00+08:00"
+          }
+        ],
+        "evidence": [
+          {
+            "id": "PO:PO-1001",
+            "source": "purchase_orders",
+            "description": "采购订单与承诺到货日",
+            "fields": {
+              "id": "PO-1001",
+              "supplier_id": "SUP-01",
+              "supplier_name": "模拟供应商01",
+              "material_code": "MAT-SENSOR-01",
+              "qty": 1000,
+              "promised_date": "2026-10-22",
+              "created_at": "2026-10-01T09:00:00+08:00",
+              "as_of": "2026-10-24"
+            }
+          },
+          {
+            "id": "SHIPMENT:SH-1001-A",
+            "source": "shipments",
+            "description": "已发运批次与数量",
+            "fields": {
+              "id": "SH-1001-A",
+              "order_id": "PO-1001",
+              "qty": 600,
+              "shipped_at": "2026-10-20T08:00:00+08:00"
+            }
+          },
+          {
+            "id": "ETA:ETA-1001-A-1",
+            "source": "eta_history",
+            "description": "快照时已知的最新 ETA 版本",
+            "fields": {
+              "id": "ETA-1001-A-1",
+              "shipment_id": "SH-1001-A",
+              "eta": "2026-10-22",
+              "updated_at": "2026-10-20T09:00:00+08:00"
+            }
+          },
+          {
+            "id": "EVENT:EV-1001-A-1",
+            "source": "logistics_events",
+            "description": "该批次最新物流事件",
+            "fields": {
+              "shipment_id": "SH-1001-A",
+              "id": "EV-1001-A-1",
+              "status": "delivered",
+              "event_time": "2026-10-22T10:00:00+08:00",
+              "note": "承运商记录：已签收。"
+            }
+          },
+          {
+            "id": "SHIPMENT:SH-1001-B",
+            "source": "shipments",
+            "description": "已发运批次与数量",
+            "fields": {
+              "id": "SH-1001-B",
+              "order_id": "PO-1001",
+              "qty": 400,
+              "shipped_at": "2026-10-20T08:00:00+08:00"
+            }
+          },
+          {
+            "id": "ETA:ETA-1001-B-1",
+            "source": "eta_history",
+            "description": "快照时已知的最新 ETA 版本",
+            "fields": {
+              "id": "ETA-1001-B-1",
+              "shipment_id": "SH-1001-B",
+              "eta": "2026-10-27",
+              "updated_at": "2026-10-20T09:00:00+08:00"
+            }
+          },
+          {
+            "id": "EVENT:EV-1001-B-1",
+            "source": "logistics_events",
+            "description": "该批次最新物流事件",
+            "fields": {
+              "shipment_id": "SH-1001-B",
+              "id": "EV-1001-B-1",
+              "status": "held",
+              "event_time": "2026-10-24T10:00:00+08:00",
+              "note": "承运商记录：中转场滞留，原因待核实。"
+            }
+          },
+          {
+            "id": "RECEIPT:RC-1001-A-1",
+            "source": "receipts",
+            "description": "已登记收货记录",
+            "fields": {
+              "id": "RC-1001-A-1",
+              "shipment_id": "SH-1001-A",
+              "qty": 600,
+              "received_at": "2026-10-22T15:00:00+08:00"
+            }
+          }
+        ],
+        "data_gaps": []
+      },
+      "status": "ok",
+      "elapsed_ms": 0.0
+    },
+    {
+      "name": "analyze_arrival",
+      "arguments": {
+        "order_id": "PO-1001"
+      },
+      "result": {
+        "order_id": "PO-1001",
+        "as_of": "2026-10-24",
+        "facts": {
+          "supplier_name": "模拟供应商01",
+          "material_code": "MAT-SENSOR-01",
+          "ordered_qty": 1000,
+          "received_qty": 600,
+          "outstanding_qty": 400,
+          "promised_date": "2026-10-22",
+          "overdue_days": 2
+        },
+        "anomalies": [
+          {
+            "code": "OVERDUE_UNRECEIVED",
+            "title": "逾期未收齐",
+            "detail": "承诺到货日为 2026-10-22；截至 2026-10-24 尚有 400 件未收货，逾期 2 天。",
+            "shipment_id": null,
+            "evidence_ids": [
+              "PO:PO-1001",
+              "CALC:PO-1001:2026-10-24"
+            ]
+          },
+          {
+            "code": "LOGISTICS_EXCEPTION",
+            "title": "物流显式异常",
+            "detail": "发运单 SH-1001-B 最新物流状态为滞留；记录备注：承运商记录：中转场滞留，原因待核实。。备注仅为记录信息，根因仍需核实。",
+            "shipment_id": "SH-1001-B",
+            "evidence_ids": [
+              "SHIPMENT:SH-1001-B",
+              "EVENT:EV-1001-B-1",
+              "CALC:PO-1001:2026-10-24"
+            ]
+          }
+        ],
+        "data_gaps": [],
+        "evidence": [
+          {
+            "id": "PO:PO-1001",
+            "source": "purchase_orders",
+            "description": "采购订单与承诺到货日",
+            "fields": {
+              "id": "PO-1001",
+              "supplier_id": "SUP-01",
+              "supplier_name": "模拟供应商01",
+              "material_code": "MAT-SENSOR-01",
+              "qty": 1000,
+              "promised_date": "2026-10-22",
+              "created_at": "2026-10-01T09:00:00+08:00",
+              "as_of": "2026-10-24"
+            }
+          },
+          {
+            "id": "SHIPMENT:SH-1001-A",
+            "source": "shipments",
+            "description": "已发运批次与数量",
+            "fields": {
+              "id": "SH-1001-A",
+              "order_id": "PO-1001",
+              "qty": 600,
+              "shipped_at": "2026-10-20T08:00:00+08:00"
+            }
+          },
+          {
+            "id": "ETA:ETA-1001-A-1",
+            "source": "eta_history",
+            "description": "快照时已知的最新 ETA 版本",
+            "fields": {
+              "id": "ETA-1001-A-1",
+              "shipment_id": "SH-1001-A",
+              "eta": "2026-10-22",
+              "updated_at": "2026-10-20T09:00:00+08:00"
+            }
+          },
+          {
+            "id": "EVENT:EV-1001-A-1",
+            "source": "logistics_events",
+            "description": "该批次最新物流事件",
+            "fields": {
+              "shipment_id": "SH-1001-A",
+              "id": "EV-1001-A-1",
+              "status": "delivered",
+              "event_time": "2026-10-22T10:00:00+08:00",
+              "note": "承运商记录：已签收。"
+            }
+          },
+          {
+            "id": "SHIPMENT:SH-1001-B",
+            "source": "shipments",
+            "description": "已发运批次与数量",
+            "fields": {
+              "id": "SH-1001-B",
+              "order_id": "PO-1001",
+              "qty": 400,
+              "shipped_at": "2026-10-20T08:00:00+08:00"
+            }
+          },
+          {
+            "id": "ETA:ETA-1001-B-1",
+            "source": "eta_history",
+            "description": "快照时已知的最新 ETA 版本",
+            "fields": {
+              "id": "ETA-1001-B-1",
+              "shipment_id": "SH-1001-B",
+              "eta": "2026-10-27",
+              "updated_at": "2026-10-20T09:00:00+08:00"
+            }
+          },
+          {
+            "id": "EVENT:EV-1001-B-1",
+            "source": "logistics_events",
+            "description": "该批次最新物流事件",
+            "fields": {
+              "shipment_id": "SH-1001-B",
+              "id": "EV-1001-B-1",
+              "status": "held",
+              "event_time": "2026-10-24T10:00:00+08:00",
+              "note": "承运商记录：中转场滞留，原因待核实。"
+            }
+          },
+          {
+            "id": "RECEIPT:RC-1001-A-1",
+            "source": "receipts",
+            "description": "已登记收货记录",
+            "fields": {
+              "id": "RC-1001-A-1",
+              "shipment_id": "SH-1001-A",
+              "qty": 600,
+              "received_at": "2026-10-22T15:00:00+08:00"
+            }
+          },
+          {
+            "id": "CALC:PO-1001:2026-10-24",
+            "source": "arrival_rules",
+            "description": "固定快照下的收货汇总与逾期计算",
+            "fields": {
+              "order_id": "PO-1001",
+              "as_of": "2026-10-24",
+              "supplier_name": "模拟供应商01",
+              "material_code": "MAT-SENSOR-01",
+              "ordered_qty": 1000,
+              "received_qty": 600,
+              "outstanding_qty": 400,
+              "promised_date": "2026-10-22",
+              "overdue_days": 2,
+              "formula": "received=sum(receipts.qty); outstanding=ordered-received; overdue=max(as_of-promised,0) if outstanding>0 else 0",
+              "input_evidence_ids": [
+                "PO:PO-1001",
+                "RECEIPT:RC-1001-A-1"
+              ]
+            }
+          }
+        ]
+      },
+      "status": "ok",
+      "elapsed_ms": 15.0
+    },
+    {
+      "name": "search_sop",
+      "arguments": {
+        "query": "逾期未收齐 供应商跟进 物流异常 滞留"
+      },
+      "result": [
+        {
+          "id": "sop:a1288d9482f5e89a:000",
+          "document": "08_supplier_followup.md",
+          "title": "供应商跟进建议与沟通草稿 / 供应商跟进规则",
+          "text": "## 供应商跟进规则\n\n业务规则：跟进建议必须建立在本次分析结果及相关 SOP 上，明确区分事实、风险、缺失信息和建议。草稿应包含订单号、物料、承诺日、已收与待交数量、需要确认的问题、期望回复时间和后续负责人。对未知字段使用“请确认”或“待补充”，不得编造已经联系供应商、已经催办、已经获得承诺等执行记录。",
+          "source_type": "sop",
+          "score": 0.263246
+        },
+        {
+          "id": "sop:21df450b76ccbe09:000",
+          "document": "03_logistics_exception.md",
+          "title": "物流异常与运输阻塞处理 / 物流异常跟进建议",
+          "text": "## 物流异常跟进建议\n\n向供应商或承运方核实运单、异常地点、发生时间、原因证据和恢复运输时间；需要替换运力或改道时由业务方审批。报告引用当前物流事件 ID 和发运批次 ID，区分“系统记录异常”与“责任原因待核实”。建议下一次更新时间和负责人由对方明确确认；不得把风险直接描述为供应商失信，也不得凭空推算罚款或赔偿。",
+          "source_type": "sop",
+          "score": 0.239258
+        },
+        {
+          "id": "sop:9805ce339bf6836b:000",
+          "document": "08_supplier_followup.md",
+          "title": "供应商跟进建议与沟通草稿 / 供应商沟通草稿建议",
+          "text": "## 供应商沟通草稿建议\n\n可参考：“您好，关于订单〔订单号〕，截至〔基准日〕系统记录已收〔数量〕，尚余〔数量〕。目前发现〔有证据的异常或数据缺口〕，请协助核对未交批次、最新预计到货日期及恢复计划，并确认可回复的时间。相关数据如有差异，请提供对应运单或签收记录。”仅在分析中确有问题时填写异常；已收齐且无当前异常则建议归档核对，无需机械催交。每条行动建议应附支持它的 SOP 段落 ID，由人审阅后决定是否联系。",
+          "source_type": "sop",
+          "score": 0.233189
+        }
+      ],
+      "status": "ok",
+      "elapsed_ms": 0.0
+    }
+  ],
+  "created_at": "2026-10-24T09:12:06.963030+00:00"
+}
