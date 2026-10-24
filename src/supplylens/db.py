@@ -76,6 +76,18 @@ class Run(Base):
     payload: Mapped[dict] = mapped_column(JSON)
 
 
+class OrderOrigin(Base):
+    """User-import provenance and explicitly provided source-table coverage."""
+
+    __tablename__ = "order_origins"
+    order_id: Mapped[str] = mapped_column(ForeignKey("purchase_orders.id"), primary_key=True)
+    batch_id: Mapped[str] = mapped_column(String(64))
+    source_name: Mapped[str] = mapped_column(Text)
+    imported_at: Mapped[datetime] = mapped_column(DateTime)
+    as_of: Mapped[date] = mapped_column(Date)
+    coverage: Mapped[dict] = mapped_column(JSON)
+
+
 def local_datetime(value: str | datetime) -> datetime:
     """ISO input, with optional offset; database stores Shanghai wall-clock time."""
     result = datetime.fromisoformat(value) if isinstance(value, str) else value
@@ -208,8 +220,12 @@ def import_seed(engine: Engine, data: dict) -> None:
 def init_database(engine: Engine, seed: bool = True) -> None:
     Base.metadata.create_all(engine)
     if seed:
-        seed_path = Path(__file__).resolve().parents[2] / "data" / "seed.json"
-        import_seed(engine, json.loads(seed_path.read_text(encoding="utf-8")))
+        # Re-starts must never reapply demo rows over imported/current business data.
+        with Session(engine) as session:
+            populated = session.query(PurchaseOrder.id).first() is not None
+        if not populated:
+            seed_path = Path(__file__).resolve().parents[2] / "data" / "seed.json"
+            import_seed(engine, json.loads(seed_path.read_text(encoding="utf-8")))
 
 
 def save_run(engine: Engine, payload: dict) -> None:

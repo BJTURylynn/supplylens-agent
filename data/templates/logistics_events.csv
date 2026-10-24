@@ -1,0 +1,2 @@
+﻿"id","shipment_id","status","event_time","note"
+"USER-EVENT-01","USER-SHIP-01","held","2026-10-24T10:00:00+08:00","示例：中转场滞留，原因待核实。"

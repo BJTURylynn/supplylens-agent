@@ -25,7 +25,9 @@ services:
       MODEL_BASE_URL: ${MODEL_BASE_URL:-https://dashscope.aliyuncs.com/compatible-mode/v1}
       MODEL_NAME: ${MODEL_NAME:-qwen-plus}
       EMBEDDING_MODEL: ${EMBEDDING_MODEL:-text-embedding-v4}
-      AS_OF_DATE: "2026-10-24"
+      AS_OF_DATE: ${AS_OF_DATE:-2026-10-24}
+      AUTO_SEED: ${AUTO_SEED:-true}
+      EMBEDDING_DIMENSIONS: ${EMBEDDING_DIMENSIONS:-1024}
       TZ: Asia/Shanghai
     ports:
       - "127.0.0.1:8000:8000"

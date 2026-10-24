@@ -23,6 +23,12 @@ def main():
     evaluate.add_argument("--output", type=Path, default=ROOT / "evaluation/results/demo.json")
     demo = sub.add_parser("demo", help="运行三段演示并保存真实 API 格式结果和 Markdown")
     demo.add_argument("--output", type=Path, default=ROOT / "docs/demos")
+    cloud = sub.add_parser("check-cloud", help="真实聊天工具调用与向量接口联调，仅发送测试文本")
+    cloud.add_argument("--output", type=Path, default=Path("runtime/cloud-check.json"))
+    imports = sub.add_parser("import-data", help="校验并导入 Excel/CSV 采购快照")
+    imports.add_argument("files", nargs="+", type=Path)
+    imports.add_argument("--as-of", required=True, help="源文件快照日期 YYYY-MM-DD")
+    imports.add_argument("--commit", action="store_true", help="确认源文件覆盖范围并实际导入；默认仅预览")
     args = parser.parse_args()
     settings = Settings()
     if args.command == "init":
@@ -38,6 +44,35 @@ def main():
     elif args.command == "serve":
         import uvicorn
         uvicorn.run("supplylens.api:create_app", factory=True, host=args.host, port=args.port)
+    elif args.command == "check-cloud":
+        from supplylens.cloud import check_cloud
+        result = asyncio.run(check_cloud(settings))
+        args.output.parent.mkdir(parents=True, exist_ok=True)
+        args.output.write_text(json.dumps(result, ensure_ascii=False, indent=2), encoding="utf-8")
+        print(json.dumps(result, ensure_ascii=False, indent=2))
+        raise SystemExit(0 if result["status"] == "ok" else 1)
+    elif args.command == "import-data":
+        from datetime import date
+
+        from supplylens.imports import MAX_FILE_BYTES, MAX_TOTAL_BYTES, ImportService, ImportValidationError
+        prepare_sqlite_dir(settings.database_url)
+        engine = make_engine(settings.database_url)
+        try:
+            init_database(engine, seed=settings.auto_seed)
+            importer = ImportService(engine)
+            if len(args.files) > 6 or any(path.stat().st_size > MAX_FILE_BYTES for path in args.files) or sum(path.stat().st_size for path in args.files) > MAX_TOTAL_BYTES:
+                raise ImportValidationError(["文件数量或大小超限：最多六个文件，每个 5 MB，合计 20 MB。"])
+            preview = importer.preview([(path.name, path.read_bytes()) for path in args.files], date.fromisoformat(args.as_of))
+            print(json.dumps(preview, ensure_ascii=False, indent=2))
+            if args.commit:
+                print(json.dumps(importer.commit(preview["preview_id"]), ensure_ascii=False, indent=2))
+            else:
+                print("尚未写入业务数据；确认后加 --commit 执行。")
+        except ImportValidationError as exc:
+            print(json.dumps({"errors": exc.errors}, ensure_ascii=False, indent=2))
+            raise SystemExit(1) from None
+        finally:
+            engine.dispose()
     elif args.command == "evaluate":
         from supplylens.evaluation import evaluate_cases
         result = asyncio.run(evaluate_cases(settings, args.mode, args.cases, args.output))

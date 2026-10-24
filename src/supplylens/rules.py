@@ -21,14 +21,16 @@ def analyze_arrival(snapshot: dict) -> dict:
     received_by_shipment: dict[str, int] = defaultdict(int)
     for row in snapshot["receipts"]:
         received_by_shipment[row["shipment_id"]] += row["qty"]
-    received = sum(received_by_shipment.values())
-    outstanding = ordered - received
-    if outstanding < 0:
+    receipts_known = snapshot.get("data_source", {}).get("coverage", {"receipts": True}).get("receipts", False)
+    observed_received = sum(received_by_shipment.values())
+    received = observed_received if receipts_known else None
+    outstanding = ordered - received if receipts_known else None
+    if observed_received > ordered:
         raise ValueError("received quantity exceeds ordered quantity")
     for shipment in snapshot["shipments"]:
         if received_by_shipment[shipment["id"]] > shipment["qty"]:
             raise ValueError(f"received quantity exceeds shipment {shipment['id']}")
-    overdue_days = max((as_of - promised).days, 0) if outstanding > 0 else 0
+    overdue_days = (max((as_of - promised).days, 0) if outstanding > 0 else 0) if receipts_known else None
     evidence_rows = [dict(row) for row in snapshot["evidence"]]
     evidence_ids = {row["id"] for row in evidence_rows}
     po_id = f"PO:{snapshot['order_id']}"
@@ -38,17 +40,19 @@ def analyze_arrival(snapshot: dict) -> dict:
              "promised_date": snapshot["promised_date"], "overdue_days": overdue_days}
     evidence_rows.append({"id": fact_id, "source": "arrival_rules", "description": "固定快照下的收货汇总与逾期计算",
                           "fields": {"order_id": snapshot["order_id"], "as_of": snapshot["as_of"], **facts,
-                                     "formula": "received=sum(receipts.qty); outstanding=ordered-received; overdue=max(as_of-promised,0) if outstanding>0 else 0",
+                                     "formula": "received=sum(receipts.qty); outstanding=ordered-received; overdue=max(as_of-promised,0) if outstanding>0 else 0" if receipts_known else "receipt coverage is incomplete; received/outstanding/overdue are unknown",
                                      "input_evidence_ids": [po_id] + [f"RECEIPT:{row['id']}" for row in snapshot["receipts"]]}})
     evidence_ids.add(fact_id)
     anomalies = []
     gaps = list(snapshot.get("data_gaps", []))
+    if not receipts_known:
+        gaps.append("未提供完整且覆盖分析日的收货快照，已收数量、未收数量及是否逾期均未知；不能把缺失数据当作零收货。")
 
     def add(code: str, title: str, detail: str, shipment_id: str | None, refs: list[str]) -> None:
         anomalies.append({"code": code, "title": title, "detail": detail, "shipment_id": shipment_id,
                           "evidence_ids": [ref for ref in dict.fromkeys(refs) if ref in evidence_ids]})
 
-    if outstanding > 0:
+    if outstanding is not None and outstanding > 0:
         if overdue_days:
             add("OVERDUE_UNRECEIVED", "逾期未收齐",
                 f"承诺到货日为 {promised.isoformat()}；截至 {as_of.isoformat()} 尚有 {outstanding} 件未收货，逾期 {overdue_days} 天。",
@@ -83,4 +87,5 @@ def analyze_arrival(snapshot: dict) -> dict:
             elif event["status"] in {"delivered", "arrived"}:
                 gaps.append(f"发运单 {shipment_id} 物流显示到达/签收，但收货记录尚欠 {remaining} 件，需核对收货登记。")
     return {"order_id": snapshot["order_id"], "as_of": snapshot["as_of"], "facts": facts,
-            "anomalies": anomalies, "data_gaps": list(dict.fromkeys(gaps)), "evidence": evidence_rows}
+            "anomalies": anomalies, "data_gaps": list(dict.fromkeys(gaps)), "evidence": evidence_rows,
+            "data_source": snapshot.get("data_source", {"kind": "synthetic", "name": "内置模拟数据"})}

@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-24T09:14:30.541435+00:00",
+  "generated_at": "2026-10-24T15:32:31.396375+00:00",
   "python": "3.12.14",
   "as_of": "2026-10-24",
   "model": null,
@@ -13,7 +13,7 @@
     "fault_injection_cases": 5,
     "live_cloud_cases": 0,
     "p50_last_turn_ms": 16.0,
-    "p95_last_turn_ms": 47.0,
+    "p95_last_turn_ms": 78.0,
     "input_tokens": null,
     "output_tokens": null,
     "interpretation": "固定样例的工作流/故障处理验收，含故障注入；不是开放域准确率。未调用真实聊天或语义向量模型。"
@@ -27,7 +27,7 @@
       "fault_injection": null,
       "live_cloud_model": false,
       "metrics": {
-        "elapsed_ms": 47.0,
+        "elapsed_ms": 63.0,
         "tool_calls": 3,
         "model_rounds": 0,
         "input_tokens": null,
@@ -35,7 +35,7 @@
       },
       "turn_metrics": [
         {
-          "elapsed_ms": 47.0,
+          "elapsed_ms": 63.0,
           "tool_calls": 3,
           "model_rounds": 0,
           "input_tokens": null,
@@ -108,7 +108,7 @@
       "fault_injection": null,
       "live_cloud_model": false,
       "metrics": {
-        "elapsed_ms": 16.0,
+        "elapsed_ms": 31.0,
         "tool_calls": 3,
         "model_rounds": 0,
         "input_tokens": null,
@@ -116,7 +116,7 @@
       },
       "turn_metrics": [
         {
-          "elapsed_ms": 16.0,
+          "elapsed_ms": 31.0,
           "tool_calls": 3,
           "model_rounds": 0,
           "input_tokens": null,
@@ -190,7 +190,7 @@
       "fault_injection": null,
       "live_cloud_model": false,
       "metrics": {
-        "elapsed_ms": 15.0,
+        "elapsed_ms": 16.0,
         "tool_calls": 3,
         "model_rounds": 0,
         "input_tokens": null,
@@ -198,7 +198,7 @@
       },
       "turn_metrics": [
         {
-          "elapsed_ms": 15.0,
+          "elapsed_ms": 16.0,
           "tool_calls": 3,
           "model_rounds": 0,
           "input_tokens": null,
@@ -231,7 +231,7 @@
       "fault_injection": null,
       "live_cloud_model": false,
       "metrics": {
-        "elapsed_ms": 16.0,
+        "elapsed_ms": 15.0,
         "tool_calls": 3,
         "model_rounds": 0,
         "input_tokens": null,
@@ -239,7 +239,7 @@
       },
       "turn_metrics": [
         {
-          "elapsed_ms": 16.0,
+          "elapsed_ms": 15.0,
           "tool_calls": 3,
           "model_rounds": 0,
           "input_tokens": null,
@@ -270,7 +270,7 @@
       "fault_injection": null,
       "live_cloud_model": false,
       "metrics": {
-        "elapsed_ms": 16.0,
+        "elapsed_ms": 31.0,
         "tool_calls": 3,
         "model_rounds": 0,
         "input_tokens": null,
@@ -278,7 +278,7 @@
       },
       "turn_metrics": [
         {
-          "elapsed_ms": 16.0,
+          "elapsed_ms": 31.0,
           "tool_calls": 3,
           "model_rounds": 0,
           "input_tokens": null,
@@ -350,7 +350,7 @@
       "fault_injection": null,
       "live_cloud_model": false,
       "metrics": {
-        "elapsed_ms": 15.0,
+        "elapsed_ms": 16.0,
         "tool_calls": 3,
         "model_rounds": 0,
         "input_tokens": null,
@@ -358,7 +358,7 @@
       },
       "turn_metrics": [
         {
-          "elapsed_ms": 15.0,
+          "elapsed_ms": 16.0,
           "tool_calls": 3,
           "model_rounds": 0,
           "input_tokens": null,
@@ -389,7 +389,7 @@
       "fault_injection": null,
       "live_cloud_model": false,
       "metrics": {
-        "elapsed_ms": 16.0,
+        "elapsed_ms": 15.0,
         "tool_calls": 3,
         "model_rounds": 0,
         "input_tokens": null,
@@ -397,7 +397,7 @@
       },
       "turn_metrics": [
         {
-          "elapsed_ms": 16.0,
+          "elapsed_ms": 15.0,
           "tool_calls": 3,
           "model_rounds": 0,
           "input_tokens": null,
@@ -550,7 +550,7 @@
       "fault_injection": null,
       "live_cloud_model": false,
       "metrics": {
-        "elapsed_ms": 16.0,
+        "elapsed_ms": 31.0,
         "tool_calls": 3,
         "model_rounds": 0,
         "input_tokens": null,
@@ -558,7 +558,7 @@
       },
       "turn_metrics": [
         {
-          "elapsed_ms": 16.0,
+          "elapsed_ms": 31.0,
           "tool_calls": 3,
           "model_rounds": 0,
           "input_tokens": null,
@@ -592,7 +592,7 @@
       "fault_injection": null,
       "live_cloud_model": false,
       "metrics": {
-        "elapsed_ms": 0.0,
+        "elapsed_ms": 15.0,
         "tool_calls": 3,
         "model_rounds": 0,
         "input_tokens": null,
@@ -607,7 +607,7 @@
           "output_tokens": null
         },
         {
-          "elapsed_ms": 0.0,
+          "elapsed_ms": 15.0,
           "tool_calls": 3,
           "model_rounds": 0,
           "input_tokens": null,
@@ -641,7 +641,7 @@
       "fault_injection": null,
       "live_cloud_model": false,
       "metrics": {
-        "elapsed_ms": 0.0,
+        "elapsed_ms": 16.0,
         "tool_calls": 3,
         "model_rounds": 0,
         "input_tokens": null,
@@ -649,14 +649,14 @@
       },
       "turn_metrics": [
         {
-          "elapsed_ms": 31.0,
+          "elapsed_ms": 16.0,
           "tool_calls": 3,
           "model_rounds": 0,
           "input_tokens": null,
           "output_tokens": null
         },
         {
-          "elapsed_ms": 0.0,
+          "elapsed_ms": 16.0,
           "tool_calls": 3,
           "model_rounds": 0,
           "input_tokens": null,
@@ -737,7 +737,7 @@
       ],
       "observed": {
         "status": "failed",
-        "answer": "未找到采购单 PO-9999，请核对单号；未生成分析结论。",
+        "answer": "未找到采购单 PO-9999，或该单在所选分析日期尚不可见；请核对单号与日期。未生成分析结论。",
         "order_id": null,
         "facts": null,
         "anomaly_codes": []
@@ -813,7 +813,7 @@
       "fault_injection": null,
       "live_cloud_model": false,
       "metrics": {
-        "elapsed_ms": 15.0,
+        "elapsed_ms": 78.0,
         "tool_calls": 3,
         "model_rounds": 0,
         "input_tokens": null,
@@ -821,7 +821,7 @@
       },
       "turn_metrics": [
         {
-          "elapsed_ms": 15.0,
+          "elapsed_ms": 78.0,
           "tool_calls": 3,
           "model_rounds": 0,
           "input_tokens": null,
@@ -894,14 +894,14 @@
       },
       "turn_metrics": [
         {
-          "elapsed_ms": 63.0,
+          "elapsed_ms": 16.0,
           "tool_calls": 3,
           "model_rounds": 0,
           "input_tokens": null,
           "output_tokens": null
         },
         {
-          "elapsed_ms": 0.0,
+          "elapsed_ms": 16.0,
           "tool_calls": 1,
           "model_rounds": 0,
           "input_tokens": null,
@@ -931,7 +931,7 @@
       "fault_injection": null,
       "live_cloud_model": false,
       "metrics": {
-        "elapsed_ms": 31.0,
+        "elapsed_ms": 15.0,
         "tool_calls": 3,
         "model_rounds": 0,
         "input_tokens": null,
@@ -939,7 +939,7 @@
       },
       "turn_metrics": [
         {
-          "elapsed_ms": 31.0,
+          "elapsed_ms": 15.0,
           "tool_calls": 3,
           "model_rounds": 0,
           "input_tokens": null,
@@ -1015,7 +1015,7 @@
       "fault_injection": "missing_sop",
       "live_cloud_model": false,
       "metrics": {
-        "elapsed_ms": 0.0,
+        "elapsed_ms": 15.0,
         "tool_calls": 3,
         "model_rounds": 0,
         "input_tokens": null,
@@ -1023,7 +1023,7 @@
       },
       "turn_metrics": [
         {
-          "elapsed_ms": 0.0,
+          "elapsed_ms": 15.0,
           "tool_calls": 3,
           "model_rounds": 0,
           "input_tokens": null,
@@ -1057,7 +1057,7 @@
       "fault_injection": "retrieval_failure",
       "live_cloud_model": false,
       "metrics": {
-        "elapsed_ms": 15.0,
+        "elapsed_ms": 16.0,
         "tool_calls": 3,
         "model_rounds": 0,
         "input_tokens": null,
@@ -1065,7 +1065,7 @@
       },
       "turn_metrics": [
         {
-          "elapsed_ms": 15.0,
+          "elapsed_ms": 16.0,
           "tool_calls": 3,
           "model_rounds": 0,
           "input_tokens": null,
@@ -1130,7 +1130,7 @@
       "fault_injection": "request_timeout",
       "live_cloud_model": false,
       "metrics": {
-        "elapsed_ms": 78.0,
+        "elapsed_ms": 93.0,
         "tool_calls": 1,
         "model_rounds": 0,
         "input_tokens": null,
@@ -1138,7 +1138,7 @@
       },
       "turn_metrics": [
         {
-          "elapsed_ms": 78.0,
+          "elapsed_ms": 93.0,
           "tool_calls": 1,
           "model_rounds": 0,
           "input_tokens": null,
@@ -1161,7 +1161,7 @@
       "fault_injection": "model_timeout",
       "live_cloud_model": false,
       "metrics": {
-        "elapsed_ms": 31.0,
+        "elapsed_ms": 32.0,
         "tool_calls": 1,
         "model_rounds": 1,
         "input_tokens": null,
@@ -1169,7 +1169,7 @@
       },
       "turn_metrics": [
         {
-          "elapsed_ms": 31.0,
+          "elapsed_ms": 32.0,
           "tool_calls": 1,
           "model_rounds": 1,
           "input_tokens": null,

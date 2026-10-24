@@ -1,3 +1,4 @@
+from datetime import date
 from typing import Any, Literal
 
 from pydantic import BaseModel, ConfigDict, Field
@@ -30,6 +31,7 @@ class Report(BaseModel):
     actions: list[Action]
     followup_draft: str | None = None
     notes: list[str] = Field(default_factory=list)
+    data_source: dict[str, Any] = Field(default_factory=lambda: {"kind": "synthetic", "name": "内置模拟数据"})
 
 
 class Metrics(BaseModel):
@@ -44,6 +46,13 @@ class ChatRequest(BaseModel):
     model_config = ConfigDict(extra="forbid")
     message: str = Field(min_length=1, max_length=2000)
     session_id: str | None = Field(default=None, max_length=64)
+    as_of: date | None = None
+
+
+class ImportCommitRequest(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+    preview_id: str = Field(min_length=32, max_length=32)
+    confirm_snapshot: bool
 
 
 class ChatResponse(BaseModel):

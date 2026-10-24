@@ -2,7 +2,11 @@
 
 **面向采购到货分析的工具调用 Agent：查订单、核对异常、检索 SOP，生成带证据的处理建议。**
 
-SupplyLens 是一个可在本地运行的个人工程作品。订单、供应商、物流事件和 SOP 均为合成数据，默认分析日期为 **2026-10-24**。
+SupplyLens 是一个可在本地运行的个人工程作品。内置订单、供应商、物流事件和 SOP 为合成数据，默认分析日期为 **2026-10-24**；也支持 Excel/CSV 导入用户数据快照，并逐单标记来源、覆盖范围与分析日期。
+
+**v0.2 新增：** [Excel/CSV 导入与模板](docs/data-import.md)、[真实 API 连接检查](docs/cloud-integration.md)。没有提供收货表时显示未知，而不是零收货。模板使用示例数据，默认 SOP 仍为自编模拟流程。
+
+![Excel 导入后的来源标记、数量与异常报告](docs/demos/05-imported-report.png)
 
 输入：`分析订单 PO-1001 的到货情况，给出异常证据和处理建议。`
 
@@ -87,6 +91,8 @@ docker compose up --build
 
 ## 使用真实模型
 
+建议先运行 `uv run supplylens check-cloud`，或点击页面侧栏的“检查真实 API”。这会实际检查向量接口和两轮工具协议，只发送测试文本。详见[联调步骤](docs/cloud-integration.md)。
+
 在 `.env` 中设置以下变量；密钥只保存在本地，切勿提交：
 
 ```dotenv
@@ -138,12 +144,19 @@ Cloud 路径包括 14 项脚本化模型协议测试，以及 1 项真实 `ChatO
 | `GET /api/orders` | 可分析的订单列表 |
 | `POST /api/chat` | 提交 `message` 和可选 `session_id`，返回回答、报告和运行 ID |
 | `GET /api/runs/{run_id}` | 查看持久化运行结果与工具调用记录 |
+| `GET /api/imports/template` | 下载 Excel / CSV 模板 |
+| `POST /api/imports/preview` | 上传、解析、校验和预览，不写业务表 |
+| `POST /api/imports/commit` | 确认后按订单快照原子导入 |
+| `GET /api/cloud/status` | 查看密钥是否配置及配置重启提示，不返回密钥 |
+| `POST /api/cloud/check` | 真实模型工具调用与向量接口联调，仅发送测试文本 |
 
 UI 使用 `.env` 或环境变量 `API_URL` 连接后端，默认 `http://127.0.0.1:8000`。精确字段和校验规则以 FastAPI `/docs` 为准。
 
 ## 继续了解
 
 - [Windows 快速启动](docs/quickstart-windows.md)
+- [Excel/CSV 导入与字段说明](docs/data-import.md)
+- [真实模型 API 联调](docs/cloud-integration.md)
 - [架构与业务边界](docs/architecture.md)
 - [3 分钟演示脚本](docs/demo-script.md)
 - [面试讲解与自检](docs/interview-guide.md)

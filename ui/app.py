@@ -2,8 +2,10 @@
 
 from __future__ import annotations
 
+import hashlib
 import html
 import os
+from datetime import date
 from typing import Any
 
 import httpx
@@ -34,6 +36,13 @@ def api_request(method: str, path: str, **kwargs: Any) -> dict[str, Any]:
         raise APIError("请求等待超时。请先检查 API 日志，避免立即重复提交同一请求。") from exc
     except httpx.HTTPStatusError as exc:
         status = exc.response.status_code
+        if status in (409, 422):
+            try:
+                detail = exc.response.json().get("detail")
+                if isinstance(detail, dict) and isinstance(detail.get("errors"), list):
+                    raise APIError("\n".join(str(error) for error in detail["errors"][:10])) from None
+            except (ValueError, TypeError):
+                pass
         if status == 404:
             message = "未找到对应记录，可能已在后端重启后失效。请重新发起分析。"
         elif status in (400, 422):
@@ -93,12 +102,15 @@ def render_report(report: dict[str, Any]) -> None:
         f"订单 {report.get('order_id', '—')} · {facts.get('supplier_name', '—')}"
         f" · 物料 {facts.get('material_code', '—')} · 数据截至 {report.get('as_of', '—')}"
     )
+    source = report.get("data_source") or {"kind": "synthetic"}
+    st.caption("数据来源：" + ("用户导入 · " + str(source.get("name", "上传文件"))
+                              if source.get("kind") == "imported" else "内置模拟数据") + "；SOP 默认为自编模拟流程。")
     c1, c2, c3, c4 = st.columns(4)
     c1.metric("订购数量", display_value(facts.get("ordered_qty")))
     c2.metric("已收货数量", display_value(facts.get("received_qty")))
     c3.metric("未收货数量", display_value(facts.get("outstanding_qty")))
     c4.metric("逾期天数", display_value(facts.get("overdue_days")))
-    st.caption(f"承诺到货日：{facts.get('promised_date', '—')} · 数量单位以模拟订单记录为准")
+    st.caption(f"承诺到货日：{facts.get('promised_date', '—')} · 数量单位：件；未知值不按零处理")
 
     anomalies = report.get("anomalies") or []
     st.markdown("**订单与批次异常**")
@@ -114,7 +126,7 @@ def render_report(report: dict[str, Any]) -> None:
         ]
         st.dataframe(rows, hide_index=True, use_container_width=True)
     else:
-        st.success("当前记录未触发到货异常规则。请结合下方信息缺口理解结果。")
+        st.info("当前记录未触发到货异常规则。请结合下方信息缺口理解结果。")
 
     gaps = report.get("data_gaps") or []
     st.markdown("**信息缺口**")
@@ -137,6 +149,90 @@ def render_report(report: dict[str, Any]) -> None:
     for note in report.get("notes") or []:
         st.caption(str(note))
 
+
+def download_template(format: str) -> bytes:
+    try:
+        with httpx.Client(timeout=20) as client:
+            response = client.get(API_URL + "/api/imports/template", params={"format": format})
+            response.raise_for_status()
+            return response.content
+    except httpx.HTTPError:
+        return b""
+
+
+def render_import_panel(analysis_date: date) -> None:
+    with st.expander("Excel / CSV 数据导入"):
+        st.caption("一个 Excel 工作簿，或按表名命名的 CSV。suppliers 和 orders 必填；缺收货表时数量显示未知。")
+        for format, label, mime, filename in [
+            ("xlsx", "下载 Excel 模板", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "supplylens-import-template.xlsx"),
+            ("csv", "下载 CSV 模板包", "application/zip", "supplylens-import-csv.zip"),
+        ]:
+            content = download_template(format)
+            if content:
+                st.download_button(label, content, file_name=filename, mime=mime, key="template-" + format)
+        uploads = st.file_uploader("选择采购快照文件", type=["xlsx", "csv"], accept_multiple_files=True,
+                                   help="每个文件最多 5 MB；CSV 模板 ZIP 请先解压再多选上传。")
+        signature = hashlib.sha256((analysis_date.isoformat() + "".join(
+            file.name + hashlib.sha256(file.getvalue()).hexdigest() for file in uploads)).encode()).hexdigest()
+        if st.session_state.get("import_signature") != signature:
+            st.session_state.import_signature = signature
+            st.session_state.pop("import_preview", None)
+        if st.button("预览并校验", disabled=not uploads):
+            try:
+                preview = api_request("POST", "/api/imports/preview", data={"as_of": analysis_date.isoformat()},
+                                      files=[("files", (file.name, file.getvalue(), file.type or "application/octet-stream")) for file in uploads])
+                st.session_state.import_preview = preview
+            except APIError as exc:
+                st.error(str(exc))
+        preview = st.session_state.get("import_preview")
+        if preview:
+            st.write(f"新增 {preview['new_orders']} 张，更新 {preview['replace_orders']} 张导入订单")
+            st.dataframe([{"表": name, "行数": count} for name, count in preview["counts"].items()], hide_index=True)
+            st.caption("订单预览（最多五条）")
+            st.dataframe(preview["sample_orders"], hide_index=True)
+            for warning in preview["warnings"]:
+                st.warning(warning)
+            confirmed = st.checkbox("确认文件覆盖截至所选日期的数据；同名导入订单将更新，空表代表没有记录，缺表代表未知。",
+                                    key="confirm-" + preview["preview_id"])
+            if st.button("确认导入", type="primary", disabled=not confirmed):
+                try:
+                    result = api_request("POST", "/api/imports/commit", json={
+                        "preview_id": preview["preview_id"], "confirm_snapshot": confirmed})
+                    st.session_state.pop("import_preview", None)
+                    reset_conversation()
+                    st.session_state.session_notice = f"已导入 {len(result['order_ids'])} 张订单；数据来源会逐单标记。"
+                    st.rerun()
+                except APIError as exc:
+                    st.error(str(exc))
+
+
+def render_cloud_panel() -> None:
+    with st.expander("真实模型 API 联调"):
+        try:
+            status = api_request("GET", "/api/cloud/status")
+        except APIError as exc:
+            st.warning(str(exc))
+            return
+        st.caption(f"聊天模型：{status['model']}；向量模型：{status['embedding_model']}")
+        st.caption("密钥状态：" + ("已配置" if status["configured"] else "未配置"))
+        if not status["configured"]:
+            st.info("请在服务端本地 .env 设置 MODEL_API_KEY，不要把密钥发到聊天或提交 GitHub。")
+        if status.get("restart_required"):
+            st.warning("本地配置已变化。连接检查会读取新配置；正式分析前请重启 API，并构建对应向量索引。")
+        if status["configured"] and status["agent_mode"] != "cloud":
+            st.info("当前分析仍是本地规则模式。使用真实模型分析需设置 AGENT_MODE=cloud 和 EMBEDDING_MODE=cloud，构建索引并重启 API。")
+        st.caption("检查只发送测试文本，验证向量接口和两轮工具调用，会产生少量模型调用；不会读取订单。")
+        if st.button("检查真实 API", disabled=not status["configured"]):
+            with st.spinner("正在检查模型接口…"):
+                try:
+                    st.session_state.cloud_check = api_request("POST", "/api/cloud/check")
+                except APIError as exc:
+                    st.error(str(exc))
+        if result := st.session_state.get("cloud_check"):
+            (st.success if result["status"] == "ok" else st.warning)(result["message"])
+            st.dataframe(result.get("stages", []), hide_index=True)
+            st.caption(f"耗时 {result.get('elapsed_ms', 0):.0f} ms；输入/输出 tokens："
+                       f"{display_value(result.get('input_tokens'))} / {display_value(result.get('output_tokens'))}")
 
 def render_steps(steps: list[dict[str, Any]]) -> None:
     if not steps:
@@ -238,10 +334,11 @@ def main() -> None:
     badges = [
         "演示模式 · 确定性工具工作流" if mode == "demo" else "云端模式 · 模型工具调用",
         "本地词法检索" if embedding == "local" else "云端向量检索",
-        f"模拟数据截至 {health.get('as_of', '—')}",
+        f"分析日 {st.session_state.get('analysis_date', health.get('as_of', '—'))}",
     ]
     st.markdown("".join(f'<span class="sl-pill">{html.escape(badge)}</span>' for badge in badges), unsafe_allow_html=True)
-    st.caption("个人作品演示 · 订单、物流和 SOP 均为合成数据；页面不代表真实企业业务结果。")
+    counts = health.get("data_counts", {})
+    st.caption(f"内置模拟订单 {counts.get('synthetic', 0)} 张 · 用户导入订单 {counts.get('imported', 0)} 张。来源逐单标记；SOP 默认为自编模拟流程。")
     if st.session_state.get("session_notice"):
         st.info(st.session_state.pop("session_notice"))
     if health.get("database") != "ok":
@@ -255,21 +352,32 @@ def main() -> None:
         st.markdown("### 分析工作台")
         st.caption("选择订单，从一个具体问题开始。")
         try:
-            orders = api_request("GET", "/api/orders").get("items") or []
+            default_date = date.fromisoformat(st.query_params.get("as_of", health.get("as_of", "2026-10-24")))
+        except ValueError:
+            default_date = date.fromisoformat(health.get("as_of", "2026-10-24"))
+        analysis_date = st.date_input("分析截至日期 / 导入快照日期", value=default_date, key="analysis_date")
+        if st.query_params.get("as_of") != analysis_date.isoformat():
+            st.query_params["as_of"] = analysis_date.isoformat()
+        st.caption("按 Asia/Shanghai 当日结束截断；不能将文件覆盖日之后的收货状态视为已知。")
+        try:
+            orders = api_request("GET", "/api/orders", params={"as_of": analysis_date.isoformat(), "limit": 1000}).get("items") or []
         except APIError as exc:
             orders = []
             st.warning(str(exc))
         choices = {str(item["order_id"]): item for item in orders if isinstance(item, dict) and item.get("order_id")}
         selected = st.selectbox(
-            "示例订单",
+            "选择订单",
             list(choices),
-            format_func=lambda value: f"{value} · {choices[value].get('supplier_name', '模拟供应商')}",
+            format_func=lambda value: f"{value} · {'导入' if choices[value].get('data_source', {}).get('kind') == 'imported' else '模拟'} · {choices[value].get('supplier_name', '')}",
             placeholder="暂无可选订单",
         )
         if st.button("分析到货情况", type="primary", use_container_width=True, disabled=not selected):
             prompt = f"请分析订单 {selected} 的到货情况，给出异常证据和处理建议。"
         if st.button("生成供应商跟进建议", use_container_width=True, disabled=not selected):
             prompt = f"请分析订单 {selected}，并帮我写一份供应商跟进建议。"
+        st.divider()
+        render_import_panel(analysis_date)
+        render_cloud_panel()
         st.divider()
         st.markdown("**可尝试追问**")
         st.caption("有哪些信息需要补充？\n\n帮我写一份供应商跟进建议")
@@ -313,7 +421,7 @@ def main() -> None:
                 result = api_request(
                     "POST",
                     "/api/chat",
-                    json={"message": prompt, "session_id": st.session_state.get("session_id")},
+                    json={"message": prompt, "session_id": st.session_state.get("session_id"), "as_of": analysis_date.isoformat()},
                 )
             except APIError as exc:
                 st.error(str(exc))

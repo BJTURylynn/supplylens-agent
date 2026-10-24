@@ -5,9 +5,9 @@ from supplylens.schemas import Action, Narrative, Report
 
 SAFE_NOTES = (
     "原因与责任归属需要业务记录或人工核实，流程文档仅用于处理建议。",
-    "当前结论仅覆盖固定日期的模拟数据快照。",
+    "当前结论仅覆盖本次分析日期内可见的数据快照。",
     "存在信息缺口时，不能据此确认整体正常。",
-    "处理建议选自本次检索的模拟流程原文，需人工核实后执行。",
+    "处理建议选自本次检索的流程原文，需人工核实后执行。",
 )
 
 
@@ -51,6 +51,7 @@ def build_report(analysis: dict, refs: list[dict], narrative: Narrative, followu
         order_id=analysis["order_id"], as_of=analysis["as_of"], facts=analysis["facts"],
         anomalies=analysis["anomalies"], data_gaps=analysis["data_gaps"],
         evidence=analysis["evidence"], sop_refs=refs, actions=narrative.actions, notes=narrative.notes,
+        data_source=analysis.get("data_source", {"kind": "synthetic", "name": "内置模拟数据"}),
     )
     for note in (SAFE_NOTES[0], SAFE_NOTES[3]):
         if note not in report.notes:
@@ -59,7 +60,9 @@ def build_report(analysis: dict, refs: list[dict], narrative: Narrative, followu
         report.notes.append("未检索到相关流程文档；业务事实仍有效，处理规则需要人工核实。")
     if followup:
         f = report.facts
-        if f["outstanding_qty"]:
+        if f["outstanding_qty"] is None:
+            requests = "当前收货快照不完整，已收与未收数量未知。请提供截至分析日的完整收货记录后再核对交付情况。"
+        elif f["outstanding_qty"]:
             requests = (
                 "请协助确认：\n"
                 "- 未收齐批次的运单、当前运输状态及对应凭证；\n"
@@ -71,15 +74,17 @@ def build_report(analysis: dict, refs: list[dict], narrative: Narrative, followu
         report.followup_draft = (
             f"主题：采购订单 {report.order_id} 到货情况核实（草稿）\n\n"
             f"{f['supplier_name']}，您好：\n\n截至 {report.as_of}，采购单 {report.order_id} "
-            f"（{f['material_code']}）采购数量 {f['ordered_qty']} 件，已收 {f['received_qty']} 件，"
-            f"未收 {f['outstanding_qty']} 件，承诺到货日为 {f['promised_date']}。\n\n"
+            f"（{f['material_code']}）采购数量 {f['ordered_qty']} 件，已收 {f['received_qty'] if f['received_qty'] is not None else '未知'}，"
+            f"未收 {f['outstanding_qty'] if f['outstanding_qty'] is not None else '未知'}，承诺到货日为 {f['promised_date']}。\n\n"
             f"{requests}\n\n如记录存在差异，请提供相应运单或签收凭证，以便进一步核对。\n\n"
-            "本草稿仅供人工审核，尚未发送。所有数据均为项目模拟数据。"
+            "本草稿仅供人工审核，尚未发送。数据来源请参见本报告的来源标识。"
         )
     return report
 
 
 def _escape(value: Any) -> str:
+    if value is None:
+        return "未知"
     return str(value).replace("|", "\\|").replace("\n", " ")
 
 
@@ -87,7 +92,8 @@ def render_markdown(report: Report, mode: str) -> str:
     f = report.facts
     lines = [
         f"# {report.order_id} 采购到货分析", "",
-        f"> **模拟数据 / 自编模拟流程** · 截至 {report.as_of} 当日结束（Asia/Shanghai）",
+        f"> **{'用户导入数据' if report.data_source.get('kind') == 'imported' else '模拟数据'} / 自编模拟流程** · 截至 {report.as_of} 当日结束（Asia/Shanghai）",
+        f"> 数据来源：{_escape(report.data_source.get('name', '内置模拟数据'))}",
         f"> 运行模式：{'无模型规则演示（非云端模型评测）' if mode == 'demo' else '云端模型工具调用'}", "",
         "## 订单概况", "", "| 项目 | 数值 |", "|---|---|",
     ]

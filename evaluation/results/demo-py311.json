@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-24T09:12:05.155726+00:00",
+  "generated_at": "2026-10-24T15:32:35.641606+00:00",
   "python": "3.11.16",
   "as_of": "2026-10-24",
   "model": null,
@@ -13,7 +13,7 @@
     "fault_injection_cases": 5,
     "live_cloud_cases": 0,
     "p50_last_turn_ms": 16.0,
-    "p95_last_turn_ms": 63.0,
+    "p95_last_turn_ms": 62.0,
     "input_tokens": null,
     "output_tokens": null,
     "interpretation": "固定样例的工作流/故障处理验收，含故障注入；不是开放域准确率。未调用真实聊天或语义向量模型。"
@@ -27,7 +27,7 @@
       "fault_injection": null,
       "live_cloud_model": false,
       "metrics": {
-        "elapsed_ms": 47.0,
+        "elapsed_ms": 62.0,
         "tool_calls": 3,
         "model_rounds": 0,
         "input_tokens": null,
@@ -35,7 +35,7 @@
       },
       "turn_metrics": [
         {
-          "elapsed_ms": 47.0,
+          "elapsed_ms": 62.0,
           "tool_calls": 3,
           "model_rounds": 0,
           "input_tokens": null,
@@ -69,7 +69,7 @@
       "fault_injection": null,
       "live_cloud_model": false,
       "metrics": {
-        "elapsed_ms": 16.0,
+        "elapsed_ms": 31.0,
         "tool_calls": 3,
         "model_rounds": 0,
         "input_tokens": null,
@@ -77,7 +77,7 @@
       },
       "turn_metrics": [
         {
-          "elapsed_ms": 16.0,
+          "elapsed_ms": 31.0,
           "tool_calls": 3,
           "model_rounds": 0,
           "input_tokens": null,
@@ -108,7 +108,7 @@
       "fault_injection": null,
       "live_cloud_model": false,
       "metrics": {
-        "elapsed_ms": 15.0,
+        "elapsed_ms": 16.0,
         "tool_calls": 3,
         "model_rounds": 0,
         "input_tokens": null,
@@ -116,7 +116,7 @@
       },
       "turn_metrics": [
         {
-          "elapsed_ms": 15.0,
+          "elapsed_ms": 16.0,
           "tool_calls": 3,
           "model_rounds": 0,
           "input_tokens": null,
@@ -149,7 +149,7 @@
       "fault_injection": null,
       "live_cloud_model": false,
       "metrics": {
-        "elapsed_ms": 63.0,
+        "elapsed_ms": 15.0,
         "tool_calls": 3,
         "model_rounds": 0,
         "input_tokens": null,
@@ -157,7 +157,7 @@
       },
       "turn_metrics": [
         {
-          "elapsed_ms": 63.0,
+          "elapsed_ms": 15.0,
           "tool_calls": 3,
           "model_rounds": 0,
           "input_tokens": null,
@@ -270,7 +270,7 @@
       "fault_injection": null,
       "live_cloud_model": false,
       "metrics": {
-        "elapsed_ms": 16.0,
+        "elapsed_ms": 32.0,
         "tool_calls": 3,
         "model_rounds": 0,
         "input_tokens": null,
@@ -278,7 +278,7 @@
       },
       "turn_metrics": [
         {
-          "elapsed_ms": 16.0,
+          "elapsed_ms": 32.0,
           "tool_calls": 3,
           "model_rounds": 0,
           "input_tokens": null,
@@ -309,7 +309,7 @@
       "fault_injection": null,
       "live_cloud_model": false,
       "metrics": {
-        "elapsed_ms": 31.0,
+        "elapsed_ms": 15.0,
         "tool_calls": 3,
         "model_rounds": 0,
         "input_tokens": null,
@@ -317,7 +317,7 @@
       },
       "turn_metrics": [
         {
-          "elapsed_ms": 31.0,
+          "elapsed_ms": 15.0,
           "tool_calls": 3,
           "model_rounds": 0,
           "input_tokens": null,
@@ -389,7 +389,7 @@
       "fault_injection": null,
       "live_cloud_model": false,
       "metrics": {
-        "elapsed_ms": 15.0,
+        "elapsed_ms": 16.0,
         "tool_calls": 3,
         "model_rounds": 0,
         "input_tokens": null,
@@ -397,7 +397,7 @@
       },
       "turn_metrics": [
         {
-          "elapsed_ms": 15.0,
+          "elapsed_ms": 16.0,
           "tool_calls": 3,
           "model_rounds": 0,
           "input_tokens": null,
@@ -428,7 +428,7 @@
       "fault_injection": null,
       "live_cloud_model": false,
       "metrics": {
-        "elapsed_ms": 16.0,
+        "elapsed_ms": 31.0,
         "tool_calls": 3,
         "model_rounds": 0,
         "input_tokens": null,
@@ -436,7 +436,7 @@
       },
       "turn_metrics": [
         {
-          "elapsed_ms": 16.0,
+          "elapsed_ms": 31.0,
           "tool_calls": 3,
           "model_rounds": 0,
           "input_tokens": null,
@@ -467,7 +467,7 @@
       "fault_injection": null,
       "live_cloud_model": false,
       "metrics": {
-        "elapsed_ms": 16.0,
+        "elapsed_ms": 15.0,
         "tool_calls": 3,
         "model_rounds": 0,
         "input_tokens": null,
@@ -475,7 +475,7 @@
       },
       "turn_metrics": [
         {
-          "elapsed_ms": 16.0,
+          "elapsed_ms": 15.0,
           "tool_calls": 3,
           "model_rounds": 0,
           "input_tokens": null,
@@ -508,7 +508,7 @@
       "fault_injection": null,
       "live_cloud_model": false,
       "metrics": {
-        "elapsed_ms": 15.0,
+        "elapsed_ms": 16.0,
         "tool_calls": 3,
         "model_rounds": 0,
         "input_tokens": null,
@@ -516,7 +516,7 @@
       },
       "turn_metrics": [
         {
-          "elapsed_ms": 15.0,
+          "elapsed_ms": 16.0,
           "tool_calls": 3,
           "model_rounds": 0,
           "input_tokens": null,
@@ -550,7 +550,7 @@
       "fault_injection": null,
       "live_cloud_model": false,
       "metrics": {
-        "elapsed_ms": 16.0,
+        "elapsed_ms": 15.0,
         "tool_calls": 3,
         "model_rounds": 0,
         "input_tokens": null,
@@ -558,7 +558,7 @@
       },
       "turn_metrics": [
         {
-          "elapsed_ms": 16.0,
+          "elapsed_ms": 15.0,
           "tool_calls": 3,
           "model_rounds": 0,
           "input_tokens": null,
@@ -600,7 +600,7 @@
       },
       "turn_metrics": [
         {
-          "elapsed_ms": 15.0,
+          "elapsed_ms": 16.0,
           "tool_calls": 3,
           "model_rounds": 0,
           "input_tokens": null,
@@ -649,7 +649,7 @@
       },
       "turn_metrics": [
         {
-          "elapsed_ms": 16.0,
+          "elapsed_ms": 31.0,
           "tool_calls": 3,
           "model_rounds": 0,
           "input_tokens": null,
@@ -720,7 +720,7 @@
       "fault_injection": null,
       "live_cloud_model": false,
       "metrics": {
-        "elapsed_ms": 0.0,
+        "elapsed_ms": 16.0,
         "tool_calls": 1,
         "model_rounds": 0,
         "input_tokens": null,
@@ -728,7 +728,7 @@
       },
       "turn_metrics": [
         {
-          "elapsed_ms": 0.0,
+          "elapsed_ms": 16.0,
           "tool_calls": 1,
           "model_rounds": 0,
           "input_tokens": null,
@@ -737,7 +737,7 @@
       ],
       "observed": {
         "status": "failed",
-        "answer": "未找到采购单 PO-9999，请核对单号；未生成分析结论。",
+        "answer": "未找到采购单 PO-9999，或该单在所选分析日期尚不可见；请核对单号与日期。未生成分析结论。",
         "order_id": null,
         "facts": null,
         "anomaly_codes": []
@@ -855,7 +855,7 @@
       "fault_injection": null,
       "live_cloud_model": false,
       "metrics": {
-        "elapsed_ms": 0.0,
+        "elapsed_ms": 15.0,
         "tool_calls": 0,
         "model_rounds": 0,
         "input_tokens": null,
@@ -863,7 +863,7 @@
       },
       "turn_metrics": [
         {
-          "elapsed_ms": 0.0,
+          "elapsed_ms": 15.0,
           "tool_calls": 0,
           "model_rounds": 0,
           "input_tokens": null,
@@ -901,7 +901,7 @@
           "output_tokens": null
         },
         {
-          "elapsed_ms": 15.0,
+          "elapsed_ms": 16.0,
           "tool_calls": 1,
           "model_rounds": 0,
           "input_tokens": null,
@@ -926,48 +926,6 @@
     {
       "id": "E24",
       "name": "拒绝伪造定性根因",
-      "passed": true,
-      "errors": [],
-      "fault_injection": null,
-      "live_cloud_model": false,
-      "metrics": {
-        "elapsed_ms": 16.0,
-        "tool_calls": 3,
-        "model_rounds": 0,
-        "input_tokens": null,
-        "output_tokens": null
-      },
-      "turn_metrics": [
-        {
-          "elapsed_ms": 16.0,
-          "tool_calls": 3,
-          "model_rounds": 0,
-          "input_tokens": null,
-          "output_tokens": null
-        }
-      ],
-      "observed": {
-        "status": "completed",
-        "answer": "已核查 PO-1001：发现 2 项到货异常，0 项待核实信息。",
-        "order_id": "PO-1001",
-        "facts": {
-          "supplier_name": "模拟供应商01",
-          "material_code": "MAT-SENSOR-01",
-          "ordered_qty": 1000,
-          "received_qty": 600,
-          "outstanding_qty": 400,
-          "promised_date": "2026-10-22",
-          "overdue_days": 2
-        },
-        "anomaly_codes": [
-          "OVERDUE_UNRECEIVED",
-          "LOGISTICS_EXCEPTION"
-        ]
-      }
-    },
-    {
-      "id": "E25",
-      "name": "用户要求篡改数量",
       "passed": true,
       "errors": [],
       "fault_injection": null,
@@ -1008,11 +966,11 @@
       }
     },
     {
-      "id": "E26",
-      "name": "检索无结果保留事实",
+      "id": "E25",
+      "name": "用户要求篡改数量",
       "passed": true,
       "errors": [],
-      "fault_injection": "missing_sop",
+      "fault_injection": null,
       "live_cloud_model": false,
       "metrics": {
         "elapsed_ms": 16.0,
@@ -1050,14 +1008,14 @@
       }
     },
     {
-      "id": "E27",
-      "name": "检索失败部分完成",
+      "id": "E26",
+      "name": "检索无结果保留事实",
       "passed": true,
       "errors": [],
-      "fault_injection": "retrieval_failure",
+      "fault_injection": "missing_sop",
       "live_cloud_model": false,
       "metrics": {
-        "elapsed_ms": 0.0,
+        "elapsed_ms": 15.0,
         "tool_calls": 3,
         "model_rounds": 0,
         "input_tokens": null,
@@ -1065,7 +1023,49 @@
       },
       "turn_metrics": [
         {
-          "elapsed_ms": 0.0,
+          "elapsed_ms": 15.0,
+          "tool_calls": 3,
+          "model_rounds": 0,
+          "input_tokens": null,
+          "output_tokens": null
+        }
+      ],
+      "observed": {
+        "status": "completed",
+        "answer": "已核查 PO-1001：发现 2 项到货异常，0 项待核实信息。",
+        "order_id": "PO-1001",
+        "facts": {
+          "supplier_name": "模拟供应商01",
+          "material_code": "MAT-SENSOR-01",
+          "ordered_qty": 1000,
+          "received_qty": 600,
+          "outstanding_qty": 400,
+          "promised_date": "2026-10-22",
+          "overdue_days": 2
+        },
+        "anomaly_codes": [
+          "OVERDUE_UNRECEIVED",
+          "LOGISTICS_EXCEPTION"
+        ]
+      }
+    },
+    {
+      "id": "E27",
+      "name": "检索失败部分完成",
+      "passed": true,
+      "errors": [],
+      "fault_injection": "retrieval_failure",
+      "live_cloud_model": false,
+      "metrics": {
+        "elapsed_ms": 16.0,
+        "tool_calls": 3,
+        "model_rounds": 0,
+        "input_tokens": null,
+        "output_tokens": null
+      },
+      "turn_metrics": [
+        {
+          "elapsed_ms": 16.0,
           "tool_calls": 3,
           "model_rounds": 0,
           "input_tokens": null,
@@ -1130,7 +1130,7 @@
       "fault_injection": "request_timeout",
       "live_cloud_model": false,
       "metrics": {
-        "elapsed_ms": 78.0,
+        "elapsed_ms": 93.0,
         "tool_calls": 1,
         "model_rounds": 0,
         "input_tokens": null,
@@ -1138,7 +1138,7 @@
       },
       "turn_metrics": [
         {
-          "elapsed_ms": 78.0,
+          "elapsed_ms": 93.0,
           "tool_calls": 1,
           "model_rounds": 0,
           "input_tokens": null,

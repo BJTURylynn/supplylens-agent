@@ -287,16 +287,10 @@ async def test_tool_exception_does_not_expose_api_key(cloud_environment, monkeyp
         tool_message(("analyze_arrival", {"order_id": "PO-1001"}, "analysis-call")),
         final_message({"actions": [], "notes": []}),
     ])
-    get_snapshot = service.repo.get_order_snapshot
-    calls = []
+    def fail_analysis(snapshot):
+        raise RuntimeError(f"API key in upstream exception: {SECRET}")
 
-    def fail_analysis(order_id):
-        calls.append(order_id)
-        if len(calls) > 1:
-            raise RuntimeError(f"API key in upstream exception: {SECRET}")
-        return get_snapshot(order_id)
-
-    monkeypatch.setattr(service.repo, "get_order_snapshot", fail_analysis)
+    monkeypatch.setattr("supplylens.agent.calculate_arrival", fail_analysis)
     result = await service.run("分析 PO-1001")
     assert result["status"] == "partial"
     assert result["steps"][1]["status"] == "error"

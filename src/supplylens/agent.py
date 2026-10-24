@@ -5,7 +5,7 @@ import re
 import time
 from collections.abc import Callable
 from dataclasses import dataclass, field
-from datetime import UTC, datetime
+from datetime import UTC, date, datetime
 from typing import Annotated, Any, TypedDict
 from uuid import uuid4
 
@@ -44,6 +44,7 @@ class Execution:
     message: str
     followup: bool
     deadline: float
+    as_of: date | None = None
     steps: list[dict] = field(default_factory=list)
     snapshot: dict | None = None
     analysis: dict | None = None
@@ -57,7 +58,8 @@ class Execution:
     demo_planned: bool = False
 
 
-SYSTEM_PROMPT = """你是 SupplyLens 汽车零部件采购到货分析助手，数据和 SOP 均为模拟。
+SYSTEM_PROMPT = """你是 SupplyLens 汽车零部件采购到货分析助手。业务数据来源由工具 data_source 指明，
+可能是内置模拟数据，也可能是用户导入的数据，导入不表示真实性已经独立核验。SOP 默认是自编模拟流程。
 只处理本次指定的采购单，其他订单必须请用户另开明确查询。
 分析日期由工具决定。业务数值、日期、异常结论只来自工具，必须调用 analyze_arrival。
 需要处理建议时调用 search_sop；建议只能引用本次检索到的真实段落 ID。
@@ -97,15 +99,17 @@ class AgentService:
         )
 
     def _tools(self, ctx: Execution):
+        repo = self.repo if ctx.as_of is None or ctx.as_of == self.repo.as_of else Repository(self.engine, ctx.as_of)
+
         @tool
         def get_order_snapshot(order_id: str) -> dict:
             """查询指定采购单截至分析日期的订单、发运、物流和收货原始记录与证据。"""
-            return self.repo.get_order_snapshot(order_id)
+            return ctx.snapshot if ctx.snapshot is not None else repo.get_order_snapshot(order_id)
 
         @tool
         def analyze_arrival(order_id: str) -> dict:
             """用确定性规则计算指定订单未收数量、逾期天数、到货异常和信息缺口。"""
-            return calculate_arrival(self.repo.get_order_snapshot(order_id))
+            return calculate_arrival(ctx.snapshot if ctx.snapshot is not None else repo.get_order_snapshot(order_id))
 
         @tool
         def search_sop(query: str) -> list[dict]:
@@ -268,16 +272,16 @@ class AgentService:
         ctx.errors.append("模型建议未通过结构或引用校验，报告仅展示核验事实和流程原文摘录")
         return default_narrative(ctx.refs)
 
-    async def run(self, message: str, session_id: str | None = None) -> dict:
+    async def run(self, message: str, session_id: str | None = None, as_of: date | None = None) -> dict:
         started = time.monotonic()
         reset = bool(session_id and session_id not in self.sessions)
         sid = session_id if session_id in self.sessions else uuid4().hex
         self.sessions.setdefault(sid, {"order_id": None})
         lock = self._locks.setdefault(sid, asyncio.Lock())
         async with lock:
-            return await self._run_locked(message, sid, reset, started)
+            return await self._run_locked(message, sid, reset, started, as_of)
 
-    async def _run_locked(self, message: str, sid: str, reset: bool, started: float) -> dict:
+    async def _run_locked(self, message: str, sid: str, reset: bool, started: float, as_of: date | None = None) -> dict:
         run_id = uuid4().hex
         metrics = Metrics()
         response = ChatResponse(session_id=sid, run_id=run_id, status="needs_input", answer="",
@@ -285,6 +289,10 @@ class AgentService:
         ids = list(dict.fromkeys("PO-" + n for n in re.findall(
             r"(?<![A-Z0-9])PO[-_\s]?(\d{4,})(?![A-Z0-9])", message.upper()
         )))
+        lookup = self.repo if as_of is None else Repository(self.engine, as_of)
+        known = await asyncio.to_thread(lookup.mentioned_order_ids, message)
+        canonical = {identifier.casefold(): identifier for identifier in known}
+        ids = list(dict.fromkeys([canonical.get(identifier.casefold(), identifier) for identifier in ids] + known))
         ctx = None
         if len(ids) > 1:
             self.sessions[sid]["order_id"] = None
@@ -301,7 +309,7 @@ class AgentService:
             else:
                 followup = bool(re.search(r"跟进|草稿|邮件|催货|催办|写.{0,12}建议", message))
                 ctx = Execution(order_id=order_id, message=message, followup=followup,
-                                deadline=started + self.settings.request_timeout_seconds)
+                                deadline=started + self.settings.request_timeout_seconds, as_of=as_of)
                 try:
                     if self.settings.agent_mode == "cloud" and not self.settings.model_api_key and not self.model_factory:
                         raise ValueError("MODEL_API_KEY 未配置")
@@ -317,7 +325,7 @@ class AgentService:
                 except OrderNotFound:
                     self.sessions[sid]["order_id"] = None
                     response.status = "failed"
-                    response.answer = f"未找到采购单 {order_id}，请核对单号；未生成分析结论。"
+                    response.answer = f"未找到采购单 {order_id}，或该单在所选分析日期尚不可见；请核对单号与日期。未生成分析结论。"
                 except (TimeoutError, BudgetExceeded):
                     ctx.errors.append("本次执行达到时间或调用上限，请重试；已完成的核查保留在执行记录中。")
                     response.status = "partial" if ctx.analysis or ctx.snapshot else "failed"
