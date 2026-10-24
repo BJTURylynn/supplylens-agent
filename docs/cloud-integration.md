@@ -7,7 +7,7 @@
 该组合已用模板示例订单实际跑通。按[模型官方页面](https://aihubmix.com/model/coding-glm-5.3-flash-free)配置本地 `.env`：
 
 ```dotenv
-MODEL_BASE_URL=https://aihubmix.com/v1
+MODEL_BASE_URL=https://api.aihubmix.com/v1
 MODEL_NAME=coding-glm-5.3-flash-free
 MODEL_EXTRA_BODY={}
 AGENT_MODE=cloud
@@ -21,6 +21,10 @@ REQUEST_TIMEOUT_SECONDS=60
 2026-10-24 实测：连接探针两轮调用成功；导入模板订单 PO-9001 的完整分析完成，工具调用 3 次、模型交互 2 轮，耗时 35188 ms，服务返回输入 5189 / 输出 1420 tokens。报告为订购 1000、已收 600、未收 400 件，逾期 2 天。这是单例联调，不是批量真实模型评测；不代表其他账号、时间或数据都能达到相同结果。
 
 随后页面复测遇到平台的未充值账号 10 次试用限制；平台以 HTTP 200 聊天文本返回额度提示。项目会识别该提示、停止重试并显示试用额度已用完，不把它当作模型业务分析结果。免费模型仍可能受账号试用门槛和配额限制；需在平台控制台核对。项目不会自动充值或换用收费模型。
+
+**2026-10-25 更新：**账号额度处理后，探针工具调用恢复成功。原域名 `aihubmix.com` 随后出现网络连接失败；对照无模型调用的站点连通检查后，改用[官方首页公告](https://aihubmix.com/)介绍的边缘入口 `api.aihubmix.com`，PO-1001 完整分析成功。耗时 37875 ms、工具 3 次、模型 2 轮，服务返回输入 5671 / 输出 1583 tokens；报告与工具证据见[真实联调存档](live-model/README.md)。这些网络现象仅说明当次环境，不代表原域名一直不可用。
+
+可复制仓库根目录的 [`.env.glm.example`](../.env.glm.example) 为本地 `.env`，再填写自己的密钥。连接异常时先核对地址和网络可达性，再排查客户端；不要把所有连接失败都归因于密钥或模型。
 
 ## 本地配置
 

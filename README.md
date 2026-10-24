@@ -6,6 +6,8 @@ SupplyLens 是一个可在本地运行的个人工程作品。内置订单、供
 
 **v0.2 新增：** [Excel/CSV 导入与模板](docs/data-import.md)、[真实 API 连接检查](docs/cloud-integration.md)。没有提供收货表时显示未知，而不是零收货。模板使用示例数据，默认 SOP 仍为自编模拟流程。
 
+**真实模型已验证：** GLM 对模拟订单 PO-1001 完成分析，工具 3 次、模型 2 轮、耗时约 38 秒。查看[报告、证据与截图](docs/live-model/README.md)，或使用[无密钥配置模板](.env.glm.example)复现。此为单例联调，不代表批量模型评测成绩。
+
 ![Excel 导入后的来源标记、数量与异常报告](docs/demos/05-imported-report.png)
 
 输入：`分析订单 PO-1001 的到货情况，给出异常证据和处理建议。`
