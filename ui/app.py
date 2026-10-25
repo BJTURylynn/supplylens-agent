@@ -299,8 +299,8 @@ def render_response(result: dict[str, Any], position: int) -> None:
 def main() -> None:
     st.markdown(
         """<style>
-        .block-container {max-width: 1200px; padding-top: 2.1rem; padding-bottom: 3rem;}
-        .sl-eyebrow {font-size: .76rem; letter-spacing: .16em; color: #64748b; font-weight: 650;}
+        .block-container {max-width: 1200px; padding-top: 5rem; padding-bottom: 3rem;}
+        .sl-eyebrow {font-size: .76rem; line-height: 1.6; letter-spacing: .16em; color: #64748b; font-weight: 650;}
         .sl-title {font-size: 2.55rem; letter-spacing: -.055em; font-weight: 750; line-height: 1.12; margin: .35rem 0;}
         .sl-subtitle {font-size: .98rem; color: #64748b; margin-bottom: 1rem;}
         .sl-pill {display: inline-block; border: 1px solid #cbd5e1; padding: .22rem .65rem;
