@@ -336,6 +336,8 @@ def main() -> None:
         "本地词法检索" if embedding == "local" else "云端向量检索",
         f"分析日 {st.session_state.get('analysis_date', health.get('as_of', '—'))}",
     ]
+    if backend := health.get("database_backend"):
+        badges.append("数据库 " + {"mysql": "MySQL", "sqlite": "SQLite"}.get(backend, backend))
     st.markdown("".join(f'<span class="sl-pill">{html.escape(badge)}</span>' for badge in badges), unsafe_allow_html=True)
     counts = health.get("data_counts", {})
     st.caption(f"内置模拟订单 {counts.get('synthetic', 0)} 张 · 用户导入订单 {counts.get('imported', 0)} 张。来源逐单标记；SOP 默认为自编模拟流程。")

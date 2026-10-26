@@ -8,11 +8,13 @@ from pathlib import Path
 from typing import Any
 
 from sqlalchemy import JSON, Date, DateTime, ForeignKey, Integer, String, Text, create_engine, event
+from sqlalchemy.dialects.mysql import DATETIME as MySQLDateTime
 from sqlalchemy.engine import Engine
 from sqlalchemy.orm import DeclarativeBase, Mapped, Session, mapped_column
 from sqlalchemy.pool import StaticPool
 
 SHANGHAI = timezone(timedelta(hours=8))
+PRECISE_DATETIME = DateTime().with_variant(MySQLDateTime(fsp=6), "mysql")
 EVENT_STATUSES = {"departed", "in_transit", "delayed", "held", "customs_hold", "exception", "delivered", "arrived"}
 
 
@@ -33,7 +35,7 @@ class PurchaseOrder(Base):
     material_code: Mapped[str] = mapped_column(String(64))
     qty: Mapped[int] = mapped_column(Integer)
     promised_date: Mapped[date] = mapped_column(Date)
-    created_at: Mapped[datetime] = mapped_column(DateTime)
+    created_at: Mapped[datetime] = mapped_column(PRECISE_DATETIME)
 
 
 class Shipment(Base):
@@ -41,7 +43,7 @@ class Shipment(Base):
     id: Mapped[str] = mapped_column(String(64), primary_key=True)
     order_id: Mapped[str] = mapped_column(ForeignKey("purchase_orders.id"), index=True)
     qty: Mapped[int] = mapped_column(Integer)
-    shipped_at: Mapped[datetime] = mapped_column(DateTime)
+    shipped_at: Mapped[datetime] = mapped_column(PRECISE_DATETIME)
 
 
 class ETAHistory(Base):
@@ -49,7 +51,7 @@ class ETAHistory(Base):
     id: Mapped[str] = mapped_column(String(64), primary_key=True)
     shipment_id: Mapped[str] = mapped_column(ForeignKey("shipments.id"), index=True)
     eta: Mapped[date] = mapped_column(Date)
-    updated_at: Mapped[datetime] = mapped_column(DateTime)
+    updated_at: Mapped[datetime] = mapped_column(PRECISE_DATETIME)
 
 
 class LogisticsEvent(Base):
@@ -57,7 +59,7 @@ class LogisticsEvent(Base):
     id: Mapped[str] = mapped_column(String(64), primary_key=True)
     shipment_id: Mapped[str] = mapped_column(ForeignKey("shipments.id"), index=True)
     status: Mapped[str] = mapped_column(String(32))
-    event_time: Mapped[datetime] = mapped_column(DateTime)
+    event_time: Mapped[datetime] = mapped_column(PRECISE_DATETIME)
     note: Mapped[str] = mapped_column(Text)
 
 
@@ -66,13 +68,13 @@ class Receipt(Base):
     id: Mapped[str] = mapped_column(String(64), primary_key=True)
     shipment_id: Mapped[str] = mapped_column(ForeignKey("shipments.id"), index=True)
     qty: Mapped[int] = mapped_column(Integer)
-    received_at: Mapped[datetime] = mapped_column(DateTime)
+    received_at: Mapped[datetime] = mapped_column(PRECISE_DATETIME)
 
 
 class Run(Base):
     __tablename__ = "runs"
     id: Mapped[str] = mapped_column(String(64), primary_key=True)
-    created_at: Mapped[datetime] = mapped_column(DateTime)
+    created_at: Mapped[datetime] = mapped_column(PRECISE_DATETIME)
     payload: Mapped[dict] = mapped_column(JSON)
 
 
@@ -83,7 +85,7 @@ class OrderOrigin(Base):
     order_id: Mapped[str] = mapped_column(ForeignKey("purchase_orders.id"), primary_key=True)
     batch_id: Mapped[str] = mapped_column(String(64))
     source_name: Mapped[str] = mapped_column(Text)
-    imported_at: Mapped[datetime] = mapped_column(DateTime)
+    imported_at: Mapped[datetime] = mapped_column(PRECISE_DATETIME)
     as_of: Mapped[date] = mapped_column(Date)
     coverage: Mapped[dict] = mapped_column(JSON)
 

@@ -1,0 +1,115 @@
+{
+  "format_version": 1,
+  "checked_at": "2026-10-26T17:11:16.954662+08:00",
+  "as_of": "2026-10-24",
+  "status": "passed",
+  "driver": "mysql+pymysql",
+  "data_kind": "synthetic",
+  "live_model_calls": 0,
+  "checks": [
+    {
+      "name": "create_tables",
+      "status": "passed",
+      "detail": {
+        "tables": [
+          "eta_history",
+          "logistics_events",
+          "order_origins",
+          "purchase_orders",
+          "receipts",
+          "runs",
+          "shipments",
+          "suppliers"
+        ],
+        "table_count": 8
+      },
+      "elapsed_ms": 188.0
+    },
+    {
+      "name": "import_synthetic_seed",
+      "status": "passed",
+      "detail": {
+        "purchase_orders": 100,
+        "suppliers": 10
+      },
+      "elapsed_ms": 265.0
+    },
+    {
+      "name": "idempotent_seed_restart",
+      "status": "passed",
+      "detail": {
+        "purchase_orders": 100,
+        "suppliers": 10
+      },
+      "elapsed_ms": 0.0
+    },
+    {
+      "name": "query_and_analyze_standard_order",
+      "status": "passed",
+      "detail": {
+        "order_id": "PO-1001",
+        "facts": {
+          "ordered_qty": 1000,
+          "received_qty": 600,
+          "outstanding_qty": 400,
+          "overdue_days": 2
+        },
+        "anomaly_codes": [
+          "LOGISTICS_EXCEPTION",
+          "OVERDUE_UNRECEIVED"
+        ]
+      },
+      "elapsed_ms": 16.0
+    },
+    {
+      "name": "xlsx_preview_and_import",
+      "status": "passed",
+      "detail": {
+        "order_id": "PO-9001",
+        "preview_was_read_only": true,
+        "outstanding_qty": 400,
+        "source": "imported"
+      },
+      "elapsed_ms": 31.0
+    },
+    {
+      "name": "csv_snapshot_update_and_restart",
+      "status": "passed",
+      "detail": {
+        "order_id": "PO-9001",
+        "received_qty": 650,
+        "outstanding_qty": 350,
+        "replacement_not_duplicate": true,
+        "restart_preserves_import": true
+      },
+      "elapsed_ms": 47.0
+    },
+    {
+      "name": "database_foreign_key_and_transaction_rollback",
+      "status": "passed",
+      "detail": {
+        "orphan_shipment_rejected": true,
+        "earlier_supplier_insert_rolled_back": true
+      },
+      "elapsed_ms": 0.0
+    },
+    {
+      "name": "agent_demo_and_run_persistence",
+      "status": "passed",
+      "detail": {
+        "status": "completed",
+        "mode": "demo",
+        "tool_calls": 3,
+        "model_calls": 0,
+        "run_json_roundtrip": true,
+        "idempotent_save": true,
+        "chinese_text_roundtrip": true
+      },
+      "elapsed_ms": 94.0
+    }
+  ],
+  "server_version": "8.4.13",
+  "schema": "supplylens_verification_20261026_d3b4298e3d2a",
+  "schema_retained_for_inspection": true,
+  "elapsed_ms": 719.0
+}

@@ -69,6 +69,7 @@ def create_app(settings: Settings | None = None, *, index=None, model_factory=No
                 pass
         counts = await asyncio.to_thread(service().repo.source_counts) if database == "ok" else {}
         return {"status": "ok" if database == "ok" else "degraded", "database": database,
+                "database_backend": app.state.engine.dialect.name if app.state.engine is not None else None,
                 "agent_mode": config.agent_mode, "embedding_mode": config.embedding_mode,
                 "model_configured": bool(config.model_api_key), "as_of": config.as_of_date.isoformat(),
                 "version": __version__, "boot_id": app.state.boot_id, "data_counts": counts}

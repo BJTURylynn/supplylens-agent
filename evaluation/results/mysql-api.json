@@ -1,0 +1,18 @@
+{
+  "checked_date": "2026-10-26",
+  "database_backend": "mysql",
+  "server_version": "8.4.13",
+  "health_status": "ok",
+  "orders_returned": 100,
+  "standard_order": "PO-1001",
+  "facts": {
+    "ordered_qty": 1000,
+    "received_qty": 600,
+    "outstanding_qty": 400,
+    "overdue_days": 2
+  },
+  "query_via_http": true,
+  "demo_chat_and_run_reload": true,
+  "live_model_calls": 0,
+  "original_application_model_mode": "cloud"
+}

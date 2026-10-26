@@ -16,6 +16,7 @@ def test_health_orders_chat_and_persisted_run(tmp_path):
     with TestClient(create_app(config(tmp_path))) as client:
         health = client.get("/health").json()
         assert health["status"] == health["database"] == "ok"
+        assert health["database_backend"] == "sqlite"
         assert health["agent_mode"] == "demo" and health["as_of"] == "2026-10-24"
         orders = client.get("/api/orders").json()["items"]
         assert len(orders) == 100 and orders[0]["order_id"] == "PO-1001"

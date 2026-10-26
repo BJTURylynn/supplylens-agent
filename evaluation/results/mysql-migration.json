@@ -1,0 +1,18 @@
+{
+  "status": "migrated",
+  "checked_at": "2026-10-26T09:12:18.923030+00:00",
+  "source_dialect": "sqlite",
+  "target_dialect": "mysql",
+  "table_counts": {
+    "runs": 25,
+    "suppliers": 10,
+    "purchase_orders": 100,
+    "order_origins": 0,
+    "shipments": 101,
+    "eta_history": 87,
+    "logistics_events": 102,
+    "receipts": 21
+  },
+  "content_verified": true,
+  "source_preserved": true
+}

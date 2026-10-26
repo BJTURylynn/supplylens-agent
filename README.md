@@ -8,6 +8,8 @@ SupplyLens 是一个可在本地运行的个人工程作品。内置订单、供
 
 **真实模型已验证：** GLM 对模拟订单 PO-1001 完成分析，工具 3 次、模型 2 轮、耗时约 38 秒。查看[报告、证据与截图](docs/live-model/README.md)，或使用[无密钥配置模板](.env.glm.example)复现。此为单例联调，不代表批量模型评测成绩。
 
+**MySQL 已实测：** MySQL 8.4.13 完成建表、导入、查询、外键与事务验证；原有 SQLite 业务与 25 条历史运行已逐行校验迁移。查看[接入步骤与实际结果](docs/mysql.md)，配置模板为 [`.env.mysql.example`](.env.mysql.example)。
+
 ![Excel 导入后的来源标记、数量与异常报告](docs/demos/05-imported-report.png)
 
 输入：`分析订单 PO-1001 的到货情况，给出异常证据和处理建议。`
@@ -84,6 +86,8 @@ uv run streamlit run ui/app.py
 
 项目的 Compose 方案由 `db`、`api`、`ui` 三个服务组成：
 
+本机直接接入 MySQL 和 SQLite 数据迁移见 [MySQL 指南](docs/mysql.md)。Compose 使用 2.24+。
+
 ```bash
 docker compose up --build
 ```
@@ -131,11 +135,11 @@ uv run supplylens evaluate --mode demo --output evaluation/results/demo.json
 uv run supplylens evaluate --mode cloud --output evaluation/results/cloud.json
 ```
 
-**已验证：** Python 3.11.16 与 3.12.14 下均有 168 项测试通过；两个版本的 30 个独立验收案例均全部通过，其中 5 个为故障注入案例，真实云模型调用数为 0。JUnit 报告：[Python 3.11](evaluation/results/pytest-py311.xml)、[Python 3.12](evaluation/results/pytest-py312.xml)。
+**已验证：** 2026-10-26，Python 3.12.14 下 186 项测试通过，另有真实 MySQL 8.4.13 建表、导入、查询及迁移验证。先前两个 Python 版本的 30 个 Demo 验收案例均通过，其中 5 个为故障注入案例，真实云模型调用数为 0。Python 3.11.16 的 168 项测试为更新前的历史记录，本轮未复测该版本。JUnit：[Python 3.12 当前结果](evaluation/results/pytest-py312.xml)、[Python 3.11 历史结果](evaluation/results/pytest-py311.xml)。
 
 真实页面已检查订单报告、工具轨迹、跟进草稿、`PO-1009` 缺失 ETA 的信息缺口提示，以及 API 重启后的上下文清理和提示。
 
-Cloud 路径包括 15 项脚本化模型协议测试，以及 1 项真实 `ChatOpenAI` SDK／模拟 HTTP 传输测试；后者验证完整两轮工具调用与 usage 解析。这些离线测试不调用真实云 API；另有 14 项连接探针测试和 33 项导入测试。实际 DashScope 探针返回 HTTP 401；随后 AIHubMix 免费 GLM 工具调用及模板订单分析已跑通，详见 [联调记录](docs/cloud-integration.md)。批量真实模型业务评测、MySQL 运行和 Docker 部署尚未执行。MySQL 已做 DDL 编译检查，本机没有 Docker CLI。
+Cloud 路径包括 15 项脚本化模型协议测试，以及 1 项真实 `ChatOpenAI` SDK／模拟 HTTP 传输测试；后者验证完整两轮工具调用与 usage 解析。这些离线测试不调用真实云 API；另有 14 项连接探针测试和 33 项导入测试。实际 DashScope 探针返回 HTTP 401；随后 AIHubMix 免费 GLM 工具调用及模板订单分析已跑通，详见 [联调记录](docs/cloud-integration.md)。MySQL 本机集成已验证，见 [MySQL 结果](docs/mysql.md)；批量真实模型业务评测和 Docker 部署尚未执行。
 
 完整状态、复现命令及结果解释见 [验证记录](docs/validation.md)；[Demo 评测原始结果](evaluation/results/demo.json)保留运行模式和样本范围。上述 30/30 是固定样例验收结果，不是开放域准确率。
 

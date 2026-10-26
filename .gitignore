@@ -13,4 +13,5 @@ evaluation/results/cloud*.json
 docs/demos/*cloud*
 data/private/
 uploads/
+.local-files/
 

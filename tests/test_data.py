@@ -5,7 +5,8 @@ from datetime import date
 from pathlib import Path
 
 import pytest
-from sqlalchemy import create_mock_engine, func, select
+from sqlalchemy import DateTime, create_mock_engine, func, select
+from sqlalchemy.dialects import sqlite
 from sqlalchemy.orm import Session
 
 from supplylens.db import (
@@ -156,3 +157,10 @@ def test_mysql_schema_compiles_without_sqlite_only_types():
     assert any("CREATE TABLE purchase_orders" in statement for statement in statements)
     assert any("CREATE TABLE eta_history" in statement for statement in statements)
     assert any("JSON" in statement for statement in statements)
+    datetime_columns = [column for table in Base.metadata.tables.values() for column in table.columns
+                        if isinstance(column.type, DateTime)]
+    assert len(datetime_columns) == 7
+    sqlite_dialect = sqlite.dialect()
+    for column in datetime_columns:
+        assert column.type.compile(dialect=engine.dialect) == "DATETIME(6)", column
+        assert column.type.compile(dialect=sqlite_dialect) == "DATETIME", column

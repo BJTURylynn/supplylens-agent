@@ -16,7 +16,7 @@ MODEL_TIMEOUT_SECONDS=40
 REQUEST_TIMEOUT_SECONDS=60
 ```
 
-另填自己的 `MODEL_API_KEY`，不要提交。`MODEL_EXTRA_BODY={}` 用于去掉默认千问专用参数；真实语言模型负责工具调用，本地词法检索负责 SOP，不请求云端 Embedding。修改后重启 API。若用 Docker Compose，需在 `api.environment` 中同时传入 `MODEL_EXTRA_BODY`（例如 `MODEL_EXTRA_BODY: '{}'`）。
+另填自己的 `MODEL_API_KEY`，不要提交。`MODEL_EXTRA_BODY={}` 用于去掉默认千问专用参数；真实语言模型负责工具调用，本地词法检索负责 SOP，不请求云端 Embedding。修改后重启 API。Docker Compose 2.24+ 可选读取本地 `.env`，会传入 `MODEL_EXTRA_BODY` 等模型参数；容器数据库地址仍由 Compose 的 `environment` 覆盖。
 
 2026-10-24 实测：连接探针两轮调用成功；导入模板订单 PO-9001 的完整分析完成，工具调用 3 次、模型交互 2 轮，耗时 35188 ms，服务返回输入 5189 / 输出 1420 tokens。报告为订购 1000、已收 600、未收 400 件，逾期 2 天。这是单例联调，不是批量真实模型评测；不代表其他账号、时间或数据都能达到相同结果。
 

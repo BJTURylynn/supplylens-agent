@@ -6,4 +6,7 @@ __pycache__
 .pytest_cache
 .ruff_cache
 *.egg-info
+.local-files
+启动项目.cmd
+本地使用说明.md
 
